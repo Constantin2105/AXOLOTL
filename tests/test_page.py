@@ -78,7 +78,7 @@ def test_dom_contract(new):
     assert toggle.attrs.get("aria-controls") == "menu" and toggle.attrs.get("aria-expanded") == "false"
     assert "hidden" in new.find("nav", id="menu").attrs
     hero = new.find(id="intro").find(cls="hero-stage")
-    stage = new.find(id="axolotl").find(cls="regen-stage")
+    stage = new.find(id="axolotl").find(cls="regen-stage").find(cls="regen-sticky")
     assert "data-axolotl-stage" in stage.attrs
     for box in (hero, stage):
         img = box.find("img", cls="axo-poster")
