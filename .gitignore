@@ -1,0 +1,4 @@
+*.parts.png
+*.geo.png
+__pycache__/
+.pytest_cache/
