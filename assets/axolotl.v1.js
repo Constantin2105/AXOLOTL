@@ -145,7 +145,7 @@
           float dl = length(d);
           mv.xy += d / (dl + 0.0001) * smoothstep(1.6, 0., dl) * 0.5 * f * (1. - uCloud);
           gl_Position = projectionMatrix * mv;
-          gl_PointSize = aSize * uPR * mix(1., uScale, .6) * (24. / -mv.z);
+          gl_PointSize = aSize * uPR * mix(1., uScale, .6) * (24. / -mv.z) * (1. - uCloud * 0.4);
           if (kind > 5.5 && kind < 6.5) {
             float gone = smoothstep(r * 0.6, r * 0.6 + 0.4, uClean);
             a = 0.95 * (1. - gone);
@@ -157,7 +157,7 @@
             gl_PointSize *= 1. + 0.7 * on * (0.5 + 0.5 * sin(uTime * 7. + ph));
           }
           vColor = col;
-          vAlpha = a * (0.1 + 0.9 * f) * (1. - uCloud * 0.3);
+          vAlpha = a * (0.1 + 0.9 * f) * (1. - uCloud * 0.82);   // dispersed behind the cards: a faint texture, never in the way of the text
         }`,
       fragmentShader: `
         varying vec3 vColor;
