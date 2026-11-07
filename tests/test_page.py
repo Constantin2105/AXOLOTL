@@ -113,3 +113,17 @@ def test_assets_versioned(new):
     assert local
     for r in local:
         assert r.endswith(".svg") or ".v1." in r, r
+
+
+def test_merci():
+    new_html = read("merci.html")
+    new_m, old_m = parse(new_html), parse(old("merci.html"))
+    assert new_m.find("h1").text() == old_m.find("h1").text()
+    old_ps = [p.text() for p in old_m.find("main").find_all("p")]
+    full = new_m.text()
+    for p in old_ps:
+        assert p in full, p
+    assert new_m.find("meta", name="robots").attrs["content"] == "noindex"
+    assert "assets/site.v1.css" in [l.attrs.get("href", "").lstrip("/") for l in new_m.find_all("link")]
+    assert "Bricolage" not in new_html
+    assert "three" not in new_html
