@@ -5,25 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Merci — Axolotl</title>
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/svg+xml" href="/assets/axolotl-mark.svg">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600&family=IBM+Plex+Sans:wght@400;600&display=swap">
-<style>
-:root { --bg:#ffffff; --ink:#0e2e2d; --muted:#4f6260; --pink:#e8708a; color-scheme: light; }
-@media (prefers-color-scheme: dark) { :root { --bg:#0b1817; --ink:#eef3f1; --muted:#a5b8b5; --pink:#f08ba0; color-scheme: dark; } }
-body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans", system-ui, sans-serif; padding: 40px max(24px, env(safe-area-inset-left, 0px)); box-sizing:border-box; }
-main { max-width: 560px; display:grid; gap:20px; }
-img { width:72px; height:72px; }
-h1 { font-family:"Bricolage Grotesque", system-ui, sans-serif; font-weight:600; font-size: clamp(36px, 6vw, 56px); line-height:1.02; letter-spacing:-.03em; margin:0; }
-p { margin:0; font-size:18px; line-height:1.6; color:var(--muted); }
-a { color:var(--ink); font-weight:600; text-underline-offset:4px; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/site.v1.css">
 </head>
-<body>
-<main>
-  <img src="/assets/axolotl-mark.svg" alt="">
+<body class="simple">
+<main class="simple-main">
+  <img class="simple-deco" src="/assets/axolotl-poster.v1.webp" alt="" width="720" height="880">
+  <p class="eyebrow">Demande reçue</p>
   <h1>Merci, votre demande est bien arrivée.</h1>
   <p>Nous vous envoyons le dossier investisseur et vous proposons un appel sous une semaine. Si vous représentez un établissement de santé, nous vous recontactons au sujet du programme pilote.</p>
-  <p><a href="/">← Retour à l'accueil</a></p>
+  <p><a class="pill" href="/">← Retour à l'accueil</a></p>
 </main>
 </body>
 </html>
