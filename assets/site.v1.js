@@ -73,7 +73,7 @@
   /* ---------- Reveals ---------- */
   const revealIO = new IntersectionObserver(entries => {
     for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); }
-  }, { rootMargin: '0px 0px -12% 0px' });
+  }, { rootMargin: '0px 0px -2% 0px' });
   document.querySelectorAll('.reveal, .stagger').forEach(el => revealIO.observe(el));
 
   /* ---------- Counters: count up once, then put the original text back exactly ---------- */

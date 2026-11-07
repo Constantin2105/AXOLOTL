@@ -157,7 +157,7 @@
             gl_PointSize *= 1. + 0.7 * on * (0.5 + 0.5 * sin(uTime * 7. + ph));
           }
           vColor = col;
-          vAlpha = a * (0.1 + 0.9 * f) * (1. - uCloud * 0.62);
+          vAlpha = a * (0.1 + 0.9 * f) * (1. - uCloud * 0.3);
         }`,
       fragmentShader: `
         varying vec3 vColor;
