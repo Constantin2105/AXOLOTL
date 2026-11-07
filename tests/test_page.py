@@ -127,3 +127,27 @@ def test_merci():
     assert "assets/site.v1.css" in [l.attrs.get("href", "").lstrip("/") for l in new_m.find_all("link")]
     assert "Bricolage" not in new_html
     assert "three" not in new_html
+
+
+def test_ui_script_runs_before_three(new):
+    srcs = [s.attrs.get("src") for s in new.find_all("script") if s.attrs.get("src")]
+    assert srcs.index("assets/site.v1.js") < srcs.index(THREE) < srcs.index("assets/axolotl.v1.js")
+
+
+def test_viewer_survives_missing_roundrect():
+    js = read("assets/site.v1.js")
+    assert "c.roundRect(" not in js          # every rounded rect goes through the fallback helper
+    assert "finally" in js and "viewer.classList.add('done')" in js
+
+
+def test_gl_canvas_sized_by_renderer():
+    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v1.css"), flags=re.S)
+    rule = re.search(r"#gl\s*\{([^}]*)\}", css).group(1)
+    assert "100vh" not in rule and "100vw" not in rule
+    assert "setSize(innerWidth, innerHeight, false)" not in read("assets/axolotl.v1.js")
+
+
+def test_desktop_hero_stage_starts_after_copy():
+    css = read("assets/site.v1.css")
+    rule = re.search(r"\.hero-stage \{ position: absolute;([^}]*)\}", css).group(1)
+    assert "left: calc(var(--gutter) + var(--rail-space) + 540px)" in rule and "width" not in rule

@@ -191,7 +191,7 @@
 
     let halfH = 1, halfW = 1;
     function resize() {
-      renderer.setSize(innerWidth, innerHeight, false);
+      renderer.setSize(innerWidth, innerHeight);   // also sets the CSS size, so canvas and projection share one viewport
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
       halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;

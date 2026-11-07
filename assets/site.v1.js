@@ -101,6 +101,8 @@
   const sc = document.getElementById('scan');
   const scanline = document.querySelector('.scanline');
   const AMBER = '#f2a93b';
+  // roundRect needs Safari 16 / Firefox 112: fall back to square corners rather than throwing
+  const rr = (ctx, x, y, w, h, r) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); };
   let base = null, zones = null, prog = [0, 0];
 
   function renderBase() {
@@ -162,12 +164,12 @@
       c.save();
       c.strokeStyle = AMBER; c.lineWidth = 2;
       c.setLineDash([per, per]); c.lineDashOffset = per * (1 - t);
-      c.beginPath(); c.roundRect(x - s, y - s, s * 2, s * 2, 6); c.stroke();
+      rr(c, x - s, y - s, s * 2, s * 2, 6); c.stroke();
       c.restore();
       const a = clamp((t - 0.7) / 0.3, 0, 1);
       if (a > 0) {
         c.globalAlpha = a;
-        c.fillStyle = AMBER; c.beginPath(); c.roundRect(x + s - 4, y - s - 26, 22, 22, 6); c.fill();
+        c.fillStyle = AMBER; rr(c, x + s - 4, y - s - 26, 22, 22, 6); c.fill();
         c.fillStyle = '#111518'; c.font = '500 12px "IBM Plex Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
         c.fillText(n, x + s + 7, y - s - 15);
         c.globalAlpha = 1; c.textBaseline = 'alphabetic';
@@ -178,28 +180,35 @@
   function tween(ms, onStep) {
     return new Promise(res => {
       const t0 = performance.now();
-      const f = now => { const t = clamp((now - t0) / ms, 0, 1); onStep(t); t < 1 ? requestAnimationFrame(f) : res(); };
+      const f = now => {
+        const t = clamp((now - t0) / ms, 0, 1);
+        try { onStep(t); } catch (e) { res(); return; }
+        t < 1 ? requestAnimationFrame(f) : res();
+      };
       requestAnimationFrame(f);
     });
   }
 
   async function playScan() {
-    const h = sc.getBoundingClientRect().height;
-    if (scanline) {
-      scanline.style.opacity = '1';
-      await tween(1600, t => { scanline.style.transform = `translateY(${(easeOut(t) * h).toFixed(1)}px)`; });
-      scanline.style.transition = 'opacity .5s'; scanline.style.opacity = '0';
+    try {
+      const h = sc.getBoundingClientRect().height;
+      if (scanline) {
+        scanline.style.opacity = '1';
+        await tween(1600, t => { scanline.style.transform = `translateY(${(easeOut(t) * h).toFixed(1)}px)`; });
+        scanline.style.transition = 'opacity .5s'; scanline.style.opacity = '0';
+      }
+      await tween(700, t => { prog[0] = easeOut(t); paint(); });
+      await tween(700, t => { prog[1] = easeOut(t); paint(); });
+    } finally {
+      viewer.classList.add('done');   // the zone list must never stay hidden
     }
-    await tween(700, t => { prog[0] = easeOut(t); paint(); });
-    await tween(700, t => { prog[1] = easeOut(t); paint(); });
-    viewer.classList.add('done');
   }
 
   if (viewer && sc) {
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
     fonts.then(() => {
       renderBase();
-      if (reduce) { prog = [1, 1]; paint(); viewer.classList.add('done'); return; }
+      if (reduce) { prog = [1, 1]; try { paint(); } finally { viewer.classList.add('done'); } return; }
       paint();
       const io = new IntersectionObserver(es => {
         if (es.some(e => e.isIntersecting)) { io.disconnect(); playScan(); }
