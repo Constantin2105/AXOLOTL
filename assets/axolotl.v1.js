@@ -96,12 +96,13 @@
     const uniforms = {
       uTime: { value: 0 }, uForm: { value: 0 }, uClean: { value: 0 }, uCloud: { value: 0 },
       uRegen: { value: 1 }, uRegenT: { value: 0 }, uShoulder: { value: new THREE.Vector3(...shoulder) },
-      uPR: { value: PR }, uScale: { value: 1 }, uMouse: { value: new THREE.Vector2(99, 99) }
+      uPR: { value: PR }, uScale: { value: 1 }, uMouse: { value: new THREE.Vector2(99, 99) },
+      uSwim: { value: 0 }, uPhase: { value: 0 }, uLife: { value: small ? 1.35 : 1 }
     };
     const material = new THREE.ShaderMaterial({
       uniforms, transparent: true, depthWrite: false,
       vertexShader: `
-        uniform float uTime, uForm, uClean, uCloud, uRegen, uRegenT, uPR, uScale;
+        uniform float uTime, uForm, uClean, uCloud, uRegen, uRegenT, uPR, uScale, uSwim, uPhase, uLife;
         uniform vec3 uShoulder;
         uniform vec2 uMouse;
         attribute vec3 aStart, aColor;
@@ -127,13 +128,14 @@
           }
           // Swimming wave, growing towards the tail
           float amp = smoothstep(0.15, 1., aGeo);
-          p.z += sin(uTime * 1.7 - aGeo * 7.) * 0.55 * amp;
-          p.x += sin(uTime * 1.2 - aGeo * 5.) * 0.12 * amp;
+          float boost = uLife * (1. + 1.3 * uSwim);
+          p.z += sin(uPhase - aGeo * 7.) * 0.55 * amp * boost;
+          p.x += sin(uPhase * 0.7 - aGeo * 5.) * 0.12 * amp * boost;
           if (kind > 0.5 && kind < 1.5) {
-            p.z += sin(uTime * 2.6 + abs(p.x) * 3. + p.y * 2.) * 0.12;
-            p.x += sign(p.x) * (0.5 + 0.5 * sin(uTime * 1.3 + p.y)) * 0.05;
+            p.z += sin(uTime * 2.6 + uPhase * 0.5 + abs(p.x) * 3. + p.y * 2.) * 0.12 * boost;
+            p.x += sign(p.x) * (0.5 + 0.5 * sin(uTime * 1.3 + p.y)) * 0.05 * boost;
           }
-          if (kind > 2.5 && kind < 3.5) p.z += sin(uTime * 1.9 + sign(p.x) * 1.6 + p.y) * 0.16;
+          if (kind > 2.5 && kind < 3.5) p.z += sin(uPhase * 1.1 + sign(p.x) * 1.6 + p.y) * 0.16 * boost;
           p += vec3(sin(uTime * .7 + ph * 3.), cos(uTime * .9 + ph * 2.), sin(uTime * .8 + ph * 5.)) * 0.012;
           if (kind > 4.5 && kind < 5.5) { p += vec3(sin(uTime * .2 + ph * 4.), cos(uTime * .17 + ph * 3.), sin(uTime * .15 + ph)) * 0.6; a = 0.28; }
           // Cloud: the shape loosens into a soft cloud
@@ -224,11 +226,28 @@
       return { state: 'cloud' };
     }
 
-    const mouse = { tx: 0, ty: 0, x: 0, y: 0, in: false };
+    const mouse = { tx: 0, ty: 0, x: 0, y: 0, in: false, until: 0 };
+    const setPointer = (cx, cy) => { mouse.tx = cx / innerWidth * 2 - 1; mouse.ty = -(cy / innerHeight * 2 - 1); mouse.in = true; };
     if (finePointer) {
-      addEventListener('pointermove', e => { mouse.tx = e.clientX / innerWidth * 2 - 1; mouse.ty = -(e.clientY / innerHeight * 2 - 1); mouse.in = true; }, { passive: true });
+      addEventListener('pointermove', e => setPointer(e.clientX, e.clientY), { passive: true });
       document.addEventListener('pointerleave', () => { mouse.in = false; });
+    } else {
+      // Touch screens: the finger pushes the particles aside while it is down, and a little after
+      const onTouch = e => { const t = e.touches[0]; if (t) { setPointer(t.clientX, t.clientY); mouse.until = performance.now() + 700; } };
+      addEventListener('touchstart', onTouch, { passive: true });
+      addEventListener('touchmove', onTouch, { passive: true });
     }
+    // Android: tilting the phone turns the animal a little. iOS would show a permission prompt, so it is skipped there.
+    const tilt = { x: 0, y: 0 };
+    if (!finePointer && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== 'function') {
+      addEventListener('deviceorientation', e => {
+        if (e.gamma == null || e.beta == null) return;
+        tilt.x = Math.max(-1, Math.min(1, e.gamma / 30));
+        tilt.y = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+      }, { passive: true });
+    }
+    // Scrolling makes it swim harder; it calms down when the page stops
+    let lastScroll = scrollY, swim = 0, swimDir = 0, phase = 0;
 
     let running = true;
     canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); running = false; root.classList.remove('gl-on'); });
@@ -276,15 +295,23 @@
         else { uniforms.uRegen.value = 1; uniforms.uRegenT.value = 1; regenStart = -1; }
       }
 
-      mouse.x += (mouse.tx - mouse.x) * kMouse; mouse.y += (mouse.ty - mouse.y) * kMouse;
+      const v = dt > 0 ? (scrollY - lastScroll) / dt : 0; lastScroll = scrollY;
+      const targetSwim = Math.min(1, Math.abs(v) / 1400);
+      swim += (targetSwim - swim) * (targetSwim > swim ? 1 - Math.exp(-dt * 8) : 1 - Math.exp(-dt * 1.6));
+      swimDir += (Math.sign(v) * targetSwim - swimDir) * (1 - Math.exp(-dt * 3));
+      phase += dt * (1.7 + 4.5 * swim);
+      uniforms.uSwim.value = swim; uniforms.uPhase.value = phase;
+      if (!finePointer && mouse.in && now > mouse.until) mouse.in = false;
+      const px = finePointer ? mouse.tx : tilt.x, py = finePointer ? mouse.ty : tilt.y;
+      mouse.x += (px - mouse.x) * kMouse; mouse.y += (py - mouse.y) * kMouse;
       uniforms.uMouse.value.set(mouse.in ? mouse.tx * halfW : 99, mouse.in ? mouse.ty * halfH : 99);
 
       outer.position.set(cur.x, cur.y, 0);
       outer.scale.setScalar(cur.s);
-      outer.rotation.x = -mouse.y * 0.12;
+      outer.rotation.x = -mouse.y * 0.12 + swimDir * 0.18;
       outer.rotation.y = mouse.x * 0.18 + cur.cloud * 0.5;
-      inner.rotation.x = TILT + Math.sin(t * 0.3) * 0.06;
-      inner.rotation.y = Math.sin(t * 0.22) * 0.1;
+      inner.rotation.x = TILT + Math.sin(t * 0.3) * 0.06 * uniforms.uLife.value;
+      inner.rotation.y = Math.sin(t * 0.22) * 0.1 * uniforms.uLife.value + Math.sin(phase * 0.35) * 0.12 * swim;
       renderer.render(scene, camera);
       if (!shown) { shown = true; root.classList.add('gl-on'); }
       requestAnimationFrame(frame);
