@@ -1,6 +1,25 @@
 [build]
   publish = "."
 
+# Working files live in the repo but must never be served on the investor site
+[[redirects]]
+  from = "/tools/*"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/docs/*"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/tests/*"
+  to = "/404"
+  status = 404
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
