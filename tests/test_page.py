@@ -8,6 +8,32 @@ from htmltree import norm, old, parse, read
 THREE = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
 SECTIONS = ["intro", "probleme", "axolotl", "produit", "avantage", "marche", "feuille-de-route", "investir"]
 REPLACED = ("Régénération", "Un membre d'axolotl repousse cellule par cellule")
+# Old sentences deliberately rewritten (Nov 2026): claims matched to the real state, mammography only
+CORRECTED = (
+    "Axolotl lit les mammographies, radiographies et scanners",
+    "En Afrique, le cancer tue d'abord",
+    "Pendant cette reconstruction, ses cellules",
+    "Ci-contre, une patte de l'axolotl repousse",
+    "Chez l'axolotl, une patte repousse",
+    "Axolotl s'intègre au flux de travail",
+    "L'image est envoyée au format DICOM",
+    "Les modèles ouverts comme MedGemma",
+    "Validé sur des examens locaux",
+    "Une IA entraînée en Europe",
+    "Axolotl fonctionne avec l'équipement",
+    "Les examens sont chiffrés",
+    "Le dépistage du cancer progresse",
+    "Ministères, ONG et campagnes",
+    "Étape 2, en cours",
+    "L'IA qui repère le cancer à",
+    "Un second regard sur chaque examen",
+    "L'examen arrive",
+    "Le modèle parcourt l'image",
+    "Abonnement mensuel par site",
+    "Tarif par examen",
+    "Étude de performance avec",
+    "Recrutement des hôpitaux et cliniques partenaires",
+)
 
 
 @pytest.fixture(scope="module")
@@ -26,7 +52,7 @@ def test_all_old_text_kept(new, before):
     for region in (before.find("main"), before.find("footer")):
         for piece in region.texts():
             piece = norm(piece)
-            if len(piece) < 3 or piece.startswith(REPLACED):
+            if len(piece) < 3 or piece.startswith(REPLACED + CORRECTED):
                 continue
             if piece not in full:
                 missing.append(piece)
@@ -53,8 +79,10 @@ def test_form_unchanged(new, before):
 
 
 def test_head(new, before):
-    assert new.find("title").text() == before.find("title").text()
-    assert new.find("meta", name="description").attrs["content"] == before.find("meta", name="description").attrs["content"]
+    assert new.find("title").text() == "Axolotl — L'IA qui repère le cancer du sein à temps"
+    for name in ("description", "og:description"):
+        meta = new.find("meta", name=name) or new.find("meta", property=name)
+        assert "mammographie" in meta.attrs["content"], name
     assert new.find("meta", name="theme-color").attrs["content"] == "#ffffff"
     assert THREE in [s.attrs.get("src") for s in new.find_all("script")]
     fonts = " ".join(l.attrs.get("href", "") for l in new.find_all("link"))
@@ -151,3 +179,57 @@ def test_desktop_hero_stage_starts_after_copy():
     css = read("assets/site.v1.css")
     rule = re.search(r"\.hero-stage \{ position: absolute;([^}]*)\}", css).group(1)
     assert "left: calc(var(--gutter) + var(--rail-space) + 540px)" in rule and "width" not in rule
+
+
+LEGAL = {"mentions-legales.html": "Mentions légales", "confidentialite.html": "Politique de confidentialité"}
+
+
+def test_no_unearned_validation_claim(new):
+    text = new.text()
+    assert "Validé sur des examens locaux" not in text
+    assert not re.search(r"\bvalidée?s?\b sur", text)
+
+
+def test_pilot_in_preparation(new):
+    now = new.find("ol", cls="road").find("li", cls="now")
+    assert now.find("span", cls="when").text() == "Étape 2, en préparation"
+    assert "en cours" not in new.find("ol", cls="road").text()
+
+
+def test_mammography_only(new):
+    head = " ".join(m.attrs.get("content", "") for m in new.find_all("meta"))
+    text = (new.find("title").text() + " " + head + " " + new.text()).lower()
+    for word in ("radiographie", "scanner", "irm", "échographie", "imagerie clinique", "examen"):
+        assert not re.search(r"\b" + word, text), word
+    assert "mammographie" in new.find(id="intro").text()
+
+
+def test_no_axolotl_cell_claim(new):
+    text = new.find(id="axolotl").text()
+    assert "cellule" not in text
+
+
+@pytest.mark.parametrize("page,title", LEGAL.items())
+def test_legal_page(page, title):
+    html = read(page)
+    root = parse(html)
+    assert root.find("h1").text() == title
+    text = root.text()
+    assert "Code du numérique" in text
+    assert "APDP" in text and "Autorité de protection des données à caractère personnel" in text
+    assert "assets/site.v1.css" in [l.attrs.get("href", "").lstrip("/") for l in root.find_all("link")]
+    assert root.find("script") is None     # plain text pages: no WebGL scene, no tracking
+
+
+def test_legal_pages_linked(new):
+    foot = [a.attrs.get("href") for a in new.find("footer").find_all("a")]
+    for page in LEGAL:
+        assert page in foot, page
+    near_form = [a.attrs.get("href") for a in new.find(id="investir").find_all("a")]
+    assert "confidentialite.html" in near_form
+
+
+def test_privacy_names_real_processors():
+    text = parse(read("confidentialite.html")).text()
+    for who in ("Netlify", "Google Fonts", "cdnjs"):
+        assert who in text, who
