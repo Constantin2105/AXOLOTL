@@ -229,6 +229,38 @@
     road.style.setProperty('--progress', p.toFixed(3));
   }
 
+  /* ---------- Footnotes: clicking a number highlights its source, with a link back ---------- */
+  let cited = null, origin = null;
+  const back = document.createElement('a');
+  back.className = 'src-back';
+  back.href = '#';
+  back.textContent = root.lang === 'en' ? '↩ Back to text' : '↩ Retour au texte';
+  const replay = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+  const go = (el, focusEl) => {
+    el.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+    focusEl.focus({ preventScroll: true });
+  };
+  document.addEventListener('click', e => {
+    const ref = e.target.closest('sup a[href^="#src-"]');
+    if (!ref) return;
+    const li = document.getElementById(ref.hash.slice(1));
+    if (!li) return;
+    e.preventDefault();
+    if (cited && cited !== li) cited.classList.remove('is-cited');
+    cited = li;
+    origin = ref;
+    li.setAttribute('tabindex', '-1');
+    li.append(back);
+    replay(li, 'is-cited');
+    go(li, li);
+  });
+  back.addEventListener('click', e => {
+    e.preventDefault();
+    if (!origin) return;
+    replay(origin, 'is-origin');
+    go(origin, origin);
+  });
+
   /* ---------- Scroll loop ---------- */
   let ticking = false;
   function onScroll() {

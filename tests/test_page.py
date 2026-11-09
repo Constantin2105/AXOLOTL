@@ -102,7 +102,7 @@ def test_no_third_party_requests(page):
 
 
 def test_fonts_self_hosted():
-    css = read("assets/site.v2.css")
+    css = read("assets/site.v3.css")
     files = re.findall(r"url\(\"?(fonts/[^)\"]+)\"?\)", css)
     assert len(files) == 3
     for f in files:
@@ -145,7 +145,7 @@ def test_no_fake_controls(new):
 
 
 def test_reveal_states_require_js_class():
-    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v2.css"), flags=re.S)
+    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v3.css"), flags=re.S)
     for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
         if not re.search(r"\.reveal|\.stagger|#title", sel):
             continue
@@ -165,24 +165,24 @@ def test_assets_versioned(new):
 
 def test_ui_script_runs_before_three(new):
     srcs = [s.attrs.get("src") for s in new.find_all("script") if s.attrs.get("src")]
-    assert srcs.index("assets/site.v2.js") < srcs.index(THREE) < srcs.index("assets/axolotl.v1.js")
+    assert srcs.index("assets/site.v3.js") < srcs.index(THREE) < srcs.index("assets/axolotl.v1.js")
 
 
 def test_viewer_survives_missing_roundrect():
-    js = read("assets/site.v2.js")
+    js = read("assets/site.v3.js")
     assert "c.roundRect(" not in js          # every rounded rect goes through the fallback helper
     assert "finally" in js and "viewer.classList.add('done')" in js
 
 
 def test_gl_canvas_sized_by_renderer():
-    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v2.css"), flags=re.S)
+    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v3.css"), flags=re.S)
     rule = re.search(r"#gl\s*\{([^}]*)\}", css).group(1)
     assert "100vh" not in rule and "100vw" not in rule
     assert "setSize(innerWidth, innerHeight, false)" not in read("assets/axolotl.v1.js")
 
 
 def test_desktop_hero_stage_starts_after_copy():
-    css = read("assets/site.v2.css")
+    css = read("assets/site.v3.css")
     rule = re.search(r"\.hero-stage \{ position: absolute;([^}]*)\}", css).group(1)
     assert "left: calc(var(--gutter) + var(--rail-space) + 540px)" in rule and "width" not in rule
 
@@ -223,7 +223,7 @@ def test_legal_page(page, title):
     text = root.text()
     assert "Code du numérique" in text
     assert "APDP" in text and "Autorité de protection des données à caractère personnel" in text
-    assert "assets/site.v2.css" in [l.attrs.get("href", "").lstrip("/") for l in root.find_all("link")]
+    assert "assets/site.v3.css" in [l.attrs.get("href", "").lstrip("/") for l in root.find_all("link")]
     assert root.find("script") is None     # plain text pages: no WebGL scene, no tracking
 
 
@@ -404,5 +404,13 @@ def test_language_links(en, new):
 
 
 def test_menu_label_translatable():
-    js = read("assets/site.v2.js")
+    js = read("assets/site.v3.js")
     assert "dataset.closeLabel" in js and "dataset.openLabel" in js
+
+
+def test_footnote_click_highlights_source():
+    js, css = read("assets/site.v3.js"), read("assets/site.v3.css")
+    assert 'sup a[href^="#src-"]' in js and "is-cited" in js and "src-back" in js
+    assert "Retour au texte" in js and "Back to text" in js
+    assert ".sources li:target" in css and ".sources li.is-cited" in css    # works without JS too
+    assert "animation: none !important" in css               # reduced motion: static highlight
