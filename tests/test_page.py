@@ -233,3 +233,22 @@ def test_privacy_names_real_processors():
     text = parse(read("confidentialite.html")).text()
     for who in ("Netlify", "Google Fonts", "cdnjs"):
         assert who in text, who
+
+
+def test_legal_identity_from_registry():
+    for page in LEGAL:
+        text = parse(read(page)).text()
+        assert "VALYON SARL" in text, page
+        assert "RB/ABC/26 B 10694" in text, page
+        assert "Abomey-Calavi" in text, page
+        assert "forme juridique" not in text and "adresse à compléter" not in text, page
+    mentions = parse(read("mentions-legales.html")).text()
+    assert "100 000 FCFA" in mentions
+    assert "Jean-Baptiste Carmel Togninou Adikin" in mentions and "Yelian Constantin Zounmevo" in mentions
+
+
+def test_apdp_request_in_progress():
+    for page in LEGAL:
+        text = parse(read(page)).text()
+        assert re.search(r"demande .{0,80}APDP.{0,40} est en cours", text), page
+        assert "récépissé à compléter" not in text, page
