@@ -252,3 +252,13 @@ def test_apdp_request_in_progress():
         text = parse(read(page)).text()
         assert re.search(r"demande .{0,80}APDP.{0,40} est en cours", text), page
         assert "récépissé à compléter" not in text, page
+
+
+def test_legal_contact_and_ifu_filled():
+    for page in LEGAL:
+        html = read(page)
+        assert 'class="todo"' not in html, page
+        assert 'href="mailto:contact@valyon.co"' in html, page
+        for private in ("0202011938915", "0202213829108", "gmail.com", "+229"):
+            assert private not in html, (page, private)
+    assert "3202660487413" in parse(read("mentions-legales.html")).text()
