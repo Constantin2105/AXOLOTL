@@ -5,8 +5,8 @@ import pytest
 from conftest import ROOT
 from htmltree import norm, old, parse, read
 
-THREE = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
-SECTIONS = ["intro", "probleme", "axolotl", "produit", "avantage", "marche", "feuille-de-route", "investir"]
+THREE = "assets/vendor/three.r128.v1.min.js"
+SECTIONS = ["intro", "probleme", "ailleurs", "axolotl", "produit", "avantage", "marche", "feuille-de-route", "investir"]
 REPLACED = ("Régénération", "Un membre d'axolotl repousse cellule par cellule")
 # Old sentences deliberately rewritten (Nov 2026): claims matched to the real state, mammography only
 CORRECTED = (
@@ -33,7 +33,11 @@ CORRECTED = (
     "Tarif par examen",
     "Étude de performance avec",
     "Recrutement des hôpitaux et cliniques partenaires",
+    # Vercel hosting + review of Nov 9: early-detection claim sourced, MedGemma fine-tuning stated
+    "Un cancer du sein repéré tôt",
+    "Un modèle médical de pointe, déjà entraîné",
 )
+CONTACT = "contact@valyon.co"
 
 
 @pytest.fixture(scope="module")
@@ -49,8 +53,11 @@ def before():
 def test_all_old_text_kept(new, before):
     full = new.text()
     missing = []
+    old_form = set(before.find("form", name="investisseurs").texts())
     for region in (before.find("main"), before.find("footer")):
         for piece in region.texts():
+            if piece in old_form:
+                continue
             piece = norm(piece)
             if len(piece) < 3 or piece.startswith(REPLACED + CORRECTED):
                 continue
@@ -59,23 +66,19 @@ def test_all_old_text_kept(new, before):
     assert not missing, missing
 
 
-def _form(root):
-    f = root.find("form", name="investisseurs")
-    assert f is not None
-    attrs = {k: f.attrs.get(k) for k in ("name", "method", "action", "data-netlify", "netlify-honeypot")}
-    hidden = {n.attrs["name"]: n.attrs.get("value") for n in f.find_all("input", type="hidden")}
-    fields = [n.attrs.get("name") for n in f.iter() if n.tag in ("input", "select", "textarea")]
-    options = [norm(" ".join(o.texts())) for o in f.find_all("option")]
-    required = sorted(n.attrs["name"] for n in f.iter() if n.tag in ("input", "select", "textarea") and "required" in n.attrs)
-    return attrs, hidden, fields, options, required
+def test_contact_by_email_not_form(new):
+    assert new.find("form") is None          # no form backend on Vercel: submissions would be lost
+    invest = new.find(id="investir")
+    mail = [a.attrs["href"] for a in invest.find_all("a") if a.attrs.get("href", "").startswith("mailto:")]
+    assert mail and mail[0].startswith("mailto:" + CONTACT + "?subject=")
+    assert CONTACT in invest.text() and CONTACT in new.find("footer").text()
 
 
-def test_form_unchanged(new, before):
-    assert _form(new) == _form(before)
-    attrs, hidden, *_ = _form(new)
-    assert attrs == {"name": "investisseurs", "method": "POST", "action": "/merci",
-                     "data-netlify": "true", "netlify-honeypot": "bot-field"}
-    assert hidden["subject"] == "Axolotl · nouveau contact investisseur (%{submissionId})"
+def test_team_on_home(new):
+    text = new.find(id="investir").text()
+    for name in ("Jean-Baptiste Carmel Togninou Adikin", "Yelian Constantin Zounmevo"):
+        assert name in text
+    assert text.count("Co-fondateur et co-gérant") == 2
 
 
 def test_head(new, before):
@@ -85,9 +88,26 @@ def test_head(new, before):
         assert "mammographie" in meta.attrs["content"], name
     assert new.find("meta", name="theme-color").attrs["content"] == "#ffffff"
     assert THREE in [s.attrs.get("src") for s in new.find_all("script")]
-    fonts = " ".join(l.attrs.get("href", "") for l in new.find_all("link"))
-    assert "Inter+Tight" in fonts and "IBM+Plex+Mono" in fonts
     assert "Bricolage" not in read("index.html")
+
+
+@pytest.mark.parametrize("page", ["index.html", "404.html", "mentions-legales.html", "confidentialite.html"])
+def test_no_third_party_requests(page):
+    """Fonts and three.js are served from our own host: no visitor IP goes to Google or Cloudflare."""
+    root = parse(read(page))
+    for n in root.iter():
+        if n.tag in ("link", "script", "img"):
+            ref = n.attrs.get("href") or n.attrs.get("src") or ""
+            assert not ref.startswith(("http:", "https:", "//")), (page, ref)
+
+
+def test_fonts_self_hosted():
+    css = read("assets/site.v1.css")
+    files = re.findall(r"url\(\"?(fonts/[^)\"]+)\"?\)", css)
+    assert len(files) == 3
+    for f in files:
+        assert (ROOT / "assets" / f).stat().st_size > 10_000, f
+    assert "Inter Tight" in css and "IBM Plex Mono" in css
 
 
 def test_sections_and_rail(new):
@@ -111,7 +131,7 @@ def test_dom_contract(new):
     for box in (hero, stage):
         img = box.find("img", cls="axo-poster")
         assert img.attrs["src"] == "assets/axolotl-poster.v1.webp" and img.attrs["alt"] == ""
-    counts = [n.attrs.get("data-count") for n in new.find_all(cls="num-figure")]
+    counts = [n.attrs["data-count"] for n in new.find_all(cls="num-figure") if "data-count" in n.attrs]
     assert counts == ["1.15", "2.1", "44", "3"]
     assert new.find("canvas", id="scan") is not None
     road = new.find("ol", cls="road")
@@ -141,20 +161,6 @@ def test_assets_versioned(new):
     assert local
     for r in local:
         assert r.endswith(".svg") or ".v1." in r, r
-
-
-def test_merci():
-    new_html = read("merci.html")
-    new_m, old_m = parse(new_html), parse(old("merci.html"))
-    assert new_m.find("h1").text() == old_m.find("h1").text()
-    old_ps = [p.text() for p in old_m.find("main").find_all("p")]
-    full = new_m.text()
-    for p in old_ps:
-        assert p in full, p
-    assert new_m.find("meta", name="robots").attrs["content"] == "noindex"
-    assert "assets/site.v1.css" in [l.attrs.get("href", "").lstrip("/") for l in new_m.find_all("link")]
-    assert "Bricolage" not in new_html
-    assert "three" not in new_html
 
 
 def test_ui_script_runs_before_three(new):
@@ -231,8 +237,12 @@ def test_legal_pages_linked(new):
 
 def test_privacy_names_real_processors():
     text = parse(read("confidentialite.html")).text()
-    for who in ("Netlify", "Google Fonts", "cdnjs"):
+    for who in ("Vercel", "Zoho"):
         assert who in text, who
+    for gone in ("Netlify", "Google Fonts", "cdnjs", "Cloudflare", "formulaire"):
+        assert gone not in text, gone
+    mentions = parse(read("mentions-legales.html")).text()
+    assert "Vercel Inc." in mentions and "Netlify" not in mentions
 
 
 def test_legal_identity_from_registry():
@@ -262,3 +272,49 @@ def test_legal_contact_and_ifu_filled():
         for private in ("0202011938915", "0202213829108", "gmail.com", "+229"):
             assert private not in html, (page, private)
     assert "3202660487413" in parse(read("mentions-legales.html")).text()
+
+
+def test_cards_numbered_in_order(new):
+    nums = [n.text() for n in new.find("div", cls="sections").find_all("p", cls="num")]
+    assert nums == [f"{i:02d}" for i in range(1, len(nums) + 1)]
+    menu = [a.attrs["href"] for a in new.find("nav", id="menu").find("ol").find_all("a")]
+    assert menu == ["#" + s for s in SECTIONS]
+
+
+def test_evidence_section(new):
+    sec = new.find(id="ailleurs")
+    text = sec.text()
+    assert "MASAI" in text and "+29 %" in text and "−44 %" in text
+    assert "un seul pays" in text
+    assert "n'est pas spécialisé en mammographie" in text and "fine-tuning" in text
+    hrefs = [a.attrs.get("href", "") for a in new.find_all("a")]
+    for ref in ("https://doi.org/10.1016/S2589-7500(24)00267-X", "https://doi.org/10.1016/S0140-6736(25)02464-X",
+                "https://www.ajol.info/index.php/jaim/article/view/239787"):
+        assert ref in hrefs, ref
+    assert "plusieurs programmes de dépistage suédois" not in text   # no source found for this claim
+
+
+def test_needs_block(new):
+    needs = new.find(id="besoins")
+    items = [li.text() for li in needs.find_all("li")]
+    assert len(items) == 4
+    for word in ("calcul", "données", "radiologues", "financement"):
+        assert any(word in i for i in items), word
+    assert CONTACT in needs.text()
+
+
+def test_footnotes_numbered_in_reading_order(new):
+    sups = [a.attrs["href"] for a in new.find_all("a") if a.attrs.get("href", "").startswith("#src-")]
+    first_seen = list(dict.fromkeys(sups))
+    assert first_seen == [f"#src-{i}" for i in range(1, len(first_seen) + 1)]
+    for ref in first_seen:
+        assert new.find(id=ref[1:]) is not None, ref
+
+
+def test_early_detection_claim_sourced(new):
+    lede = new.find(id="probleme").find("p", cls="lede")
+    assert "99 %" in lede.text() and lede.find("sup") is not None
+
+
+def test_preprint_flagged(new):
+    assert "prépublication non relue par des pairs" in new.find(id="axolotl").text()

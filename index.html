@@ -14,12 +14,10 @@
   // Hidden-before-reveal states only apply while the UI script runs; if it never starts, show everything.
   (function (d) { d.classList.replace('no-js', 'js'); setTimeout(function () { if (!d.classList.contains('ui')) d.classList.replace('js', 'no-js'); }, 2500); })(document.documentElement);
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preload" href="assets/fonts/inter-tight-latin.v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.v1.css">
 <script src="assets/site.v1.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<script src="assets/vendor/three.r128.v1.min.js" defer></script>
 <script src="assets/axolotl.v1.js" defer></script>
 </head>
 <body>
@@ -42,12 +40,13 @@
   <ol class="menu-list">
     <li><a href="#intro"><span>00</span>Intro</a></li>
     <li><a href="#probleme"><span>01</span>Le problème</a></li>
-    <li><a href="#axolotl"><span>02</span>Pourquoi ce nom</a></li>
-    <li><a href="#produit"><span>03</span>Le produit</a></li>
-    <li><a href="#avantage"><span>04</span>Notre avantage</a></li>
-    <li><a href="#marche"><span>05</span>Le marché</a></li>
-    <li><a href="#feuille-de-route"><span>06</span>Feuille de route</a></li>
-    <li><a href="#investir"><span>07</span>Investir</a></li>
+    <li><a href="#ailleurs"><span>02</span>Ce qui a marché ailleurs</a></li>
+    <li><a href="#axolotl"><span>03</span>Pourquoi ce nom</a></li>
+    <li><a href="#produit"><span>04</span>Le produit</a></li>
+    <li><a href="#avantage"><span>05</span>Notre avantage</a></li>
+    <li><a href="#marche"><span>06</span>Le marché</a></li>
+    <li><a href="#feuille-de-route"><span>07</span>Feuille de route</a></li>
+    <li><a href="#investir"><span>08</span>Investir et nous écrire</a></li>
   </ol>
   <a class="pill pill-dark menu-cta" href="#investir">Recevoir le dossier investisseur</a>
 </nav>
@@ -56,6 +55,7 @@
   <span class="dot" aria-hidden="true"></span>
   <li><a href="#intro" data-for="intro">Intro</a></li>
   <li><a href="#probleme" data-for="probleme">Le problème</a></li>
+  <li><a href="#ailleurs" data-for="ailleurs">Preuves</a></li>
   <li><a href="#axolotl" data-for="axolotl">Axolotl</a></li>
   <li><a href="#produit" data-for="produit">Le produit</a></li>
   <li><a href="#avantage" data-for="avantage">Avantage</a></li>
@@ -100,30 +100,96 @@
         </div>
       </div>
       <div class="card-body">
-        <p class="lede">Un cancer du sein repéré tôt se soigne dans la grande majorité des cas. Repéré tard, il devient souvent mortel. La différence se joue sur l'image, et sur le temps qu'il faut pour qu'un spécialiste la lise.</p>
+        <p class="lede">Un cancer du sein repéré tôt se soigne dans la grande majorité des cas&nbsp;: aux États-Unis, à un stade localisé, la survie à cinq ans dépasse 99&nbsp;%.<sup><a href="#src-1" aria-label="Source 1">1</a></sup> Repéré tard, il devient souvent mortel. La différence se joue sur l'image, et sur le temps qu'il faut pour qu'un spécialiste la lise.</p>
         <div class="figures stagger">
           <div class="figure">
             <p class="num-figure" data-count="1.15" data-decimals="2">1,15&nbsp;M</p>
-            <p>nouveaux cas de cancer en Afrique en 2022, et environ 754&nbsp;500 décès.<sup><a href="#src-1" aria-label="Source 1">1</a></sup></p>
+            <p>nouveaux cas de cancer en Afrique en 2022, et environ 754&nbsp;500 décès.<sup><a href="#src-2" aria-label="Source 2">2</a></sup></p>
           </div>
           <div class="figure">
             <p class="num-figure" data-count="2.1" data-decimals="1">2,1&nbsp;M</p>
-            <p>nouveaux cas par an attendus d'ici 2040, avec la croissance et le vieillissement de la population.<sup><a href="#src-2" aria-label="Source 2">2</a></sup></p>
+            <p>nouveaux cas par an attendus d'ici 2040, avec la croissance et le vieillissement de la population.<sup><a href="#src-3" aria-label="Source 3">3</a></sup></p>
           </div>
           <div class="figure">
             <p class="num-figure" data-count="44" data-decimals="0">44&nbsp;<small>%</small></p>
-            <p>de survie à cinq ans pour le cancer du sein en Afrique subsaharienne. La moitié des patientes sont diagnostiquées au stade III.<sup><a href="#src-3" aria-label="Source 3">3</a></sup></p>
+            <p>de survie à cinq ans pour le cancer du sein en Afrique subsaharienne. La moitié des patientes sont diagnostiquées au stade III.<sup><a href="#src-4" aria-label="Source 4">4</a></sup></p>
           </div>
           <div class="figure">
             <p class="num-figure" data-count="3" data-decimals="0">3&nbsp;<small>/ million</small></p>
-            <p>radiologues par million d'habitants au Ghana, contre 100 à 120 recommandés.<sup><a href="#src-4" aria-label="Source 4">4</a></sup></p>
+            <p>radiologues par million d'habitants au Ghana, contre 100 à 120 recommandés.<sup><a href="#src-5" aria-label="Source 5">5</a></sup></p>
           </div>
         </div>
         <ol class="sources">
-          <li id="src-1">Centre international de recherche sur le cancer (CIRC), estimations GLOBOCAN 2022.</li>
-          <li id="src-2">Projection du fardeau du cancer en Afrique à l'horizon 2040, <a href="https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2022.839835/full" target="_blank" rel="noopener">Frontiers in Public Health, 2022</a>.</li>
-          <li id="src-3">« Prognostic factors of breast cancer and survival in Sub-Saharan Africa », revue systématique et méta-analyse, 85 études, 33&nbsp;053 patientes, 2025.</li>
-          <li id="src-4">« Density and regional distribution of radiologists in a low-income country: the Ghana situation », 2023.</li>
+          <li id="src-1">American Cancer Society, <a href="https://www.cancer.org/cancer/types/breast-cancer/understanding-a-breast-cancer-diagnosis/breast-cancer-survival-rates.html" target="_blank" rel="noopener">« Survival Rates for Breast Cancer »</a>, données SEER, femmes diagnostiquées entre 2015 et 2021.</li>
+          <li id="src-2">Centre international de recherche sur le cancer (CIRC), estimations GLOBOCAN 2022.</li>
+          <li id="src-3">Projection du fardeau du cancer en Afrique à l'horizon 2040, <a href="https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2022.839835/full" target="_blank" rel="noopener">Frontiers in Public Health, 2022</a>.</li>
+          <li id="src-4">« Prognostic factors of breast cancer and survival in Sub-Saharan Africa », revue systématique et méta-analyse, 85 études, 33&nbsp;053 patientes, 2025.</li>
+          <li id="src-5">« Density and regional distribution of radiologists in a low-income country: the Ghana situation », 2023.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card reveal" id="ailleurs" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">02</p>
+        <div>
+          <p class="meta">Ce qui a marché ailleurs</p>
+          <h2>En Suède, l'IA aide déjà les radiologues à trouver plus de cancers du sein.</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="lede">Entre 2021 et 2022, l'essai MASAI a inclus près de 106&nbsp;000 femmes dépistées en Suède. La moitié a eu la lecture habituelle par deux radiologues. Pour l'autre moitié, la lecture était aidée par l'IA, et le radiologue gardait la décision finale.<sup><a href="#src-6" aria-label="Source 6">6</a></sup></p>
+        <div class="figures figures-2 stagger">
+          <div class="figure">
+            <p class="num-figure">+29&nbsp;<small>%</small></p>
+            <p>de cancers détectés, sans plus de fausses alertes.<sup><a href="#src-6" aria-label="Source 6">6</a></sup></p>
+          </div>
+          <div class="figure">
+            <p class="num-figure">−44&nbsp;<small>%</small></p>
+            <p>de travail de lecture pour les radiologues.<sup><a href="#src-6" aria-label="Source 6">6</a></sup></p>
+          </div>
+        </div>
+        <p class="body-text">Les résultats finaux, publiés dans <i>The Lancet</i> en 2026, montrent que la lecture aidée par l'IA ne laisse pas passer plus de cancers entre deux dépistages, et qu'il y a moins de cancers agressifs parmi ces cas.<sup><a href="#src-7" aria-label="Source 7">7</a></sup></p>
+
+        <div class="adapt">
+          <h3>Ce qu'il faut adapter chez nous</h3>
+          <p class="body-text">Ces résultats ont été obtenus dans un seul pays, avec un seul type de mammographe et un seul logiciel d'IA.<sup><a href="#src-7" aria-label="Source 7">7</a></sup> Rien ne garantit qu'ils se transposent tels quels à d'autres appareils, à d'autres patientes et à un autre système de santé. Au Bénin, une étude menée dans les hôpitaux publics conclut que l'imagerie indispensable à la prise en charge du cancer du sein y reste très peu accessible, et recommande de créer un programme national de dépistage par mammographie.<sup><a href="#src-8" aria-label="Source 8">8</a></sup></p>
+          <p class="body-text">Axolotl s'appuie sur MedGemma, un modèle médical ouvert mais généraliste, qui n'est pas spécialisé en mammographie. Notre méthode tient en trois étapes&nbsp;:</p>
+          <ol class="steps stagger">
+            <li class="step">
+              <span class="n">1. Évaluer</span>
+              <h3>Le point de départ</h3>
+              <p>Tester MedGemma tel quel sur des mammographies, pour mesurer ce qu'il sait déjà faire.</p>
+            </li>
+            <li class="step">
+              <span class="n">2. Adapter</span>
+              <h3>Le fine-tuning</h3>
+              <p>Spécialiser le modèle par fine-tuning, d'abord sur des mammographies publiques, puis sur des mammographies de la région.</p>
+            </li>
+            <li class="step">
+              <span class="n">3. Réévaluer</span>
+              <h3>Avec nos radiologues</h3>
+              <p>Mesurer le gain sur des mammographies locales, avec nos radiologues partenaires, avant tout usage clinique.</p>
+            </li>
+          </ol>
+          <p class="pull">Comme dans MASAI, Axolotl signale et le radiologue décide.</p>
+        </div>
+
+        <div class="needs" id="besoins">
+          <h3>Ce dont nous avons besoin</h3>
+          <ul>
+            <li><b>De la puissance de calcul</b><span>pour évaluer MedGemma, le fine-tuner et mesurer le gain obtenu.</span></li>
+            <li><b>Un jeu de données de départ</b><span>des mammographies publiques pour la première évaluation, puis des mammographies locales collectées avec nos partenaires, avec l'autorisation de l'APDP et l'avis d'un comité d'éthique.</span></li>
+            <li><b>Des radiologues partenaires</b><span>pour annoter les mammographies et mener la validation.</span></li>
+            <li><b>Un premier financement</b><span>pour conduire le pilote clinique au Bénin.</span></li>
+          </ul>
+          <p>Vous pouvez nous aider sur l'un de ces points&nbsp;? Écrivez-nous&nbsp;: <a href="mailto:contact@valyon.co">contact@valyon.co</a>.</p>
+        </div>
+
+        <ol class="sources" start="6">
+          <li id="src-6">Hernström V. et al., « Screening performance and characteristics of breast cancer detected in the Mammography Screening with Artificial Intelligence trial (MASAI) », <a href="https://doi.org/10.1016/S2589-7500(24)00267-X" target="_blank" rel="noopener">The Lancet Digital Health, 2025, 7(3), 175–183</a>.</li>
+          <li id="src-7">Gommers J. et al., « Interval cancer, sensitivity, and specificity comparing AI-supported mammography screening with standard double reading without AI in the MASAI study », <a href="https://doi.org/10.1016/S0140-6736(25)02464-X" target="_blank" rel="noopener">The Lancet, 2026, 407(10527), 505–514</a>.</li>
+          <li id="src-8">Yekpe Ahouansou P. et al., « Accessibilité à l'imagerie dans la prise en charge des cancers du sein en milieu hospitalier au Bénin », <a href="https://www.ajol.info/index.php/jaim/article/view/239787" target="_blank" rel="noopener">Journal Africain d'Imagerie Médicale, 2022, 14(1), 8–13</a>.</li>
         </ol>
       </div>
     </section>
@@ -136,7 +202,7 @@
       </div>
       <div class="panel reveal">
         <div class="card-head">
-          <p class="num" aria-hidden="true">02</p>
+          <p class="num" aria-hidden="true">03</p>
           <div>
             <p class="meta">Pourquoi ce nom</p>
             <h2>L'axolotl reconstruit ce qu'il perd, sans que la croissance ne s'emballe.</h2>
@@ -145,7 +211,7 @@
         <div class="card-body prose">
           <p>Cette petite salamandre mexicaine fait repousser une patte entière&nbsp;: os, muscles, nerfs, peau. Elle régénère aussi sa queue, sa moelle épinière, son cœur et des parties de son cerveau.</p>
           <p>La croissance reste disciplinée et s'arrête quand le membre est complet. Les tumeurs y sont si rares que les laboratoires du monde entier l'étudient pour comprendre comment le vivant garde le contrôle.</p>
-          <p class="note">Cette résistance n'est pas absolue&nbsp;: des tumeurs ont été observées chez l'axolotl, et la science cherche encore à l'expliquer. Pour aller plus loin&nbsp;: <a href="https://www.preprints.org/manuscript/202601.1486" target="_blank" rel="noopener">Lagunas-Rangel, « Are Axolotls Resistant to Cancer? Possible Explanations »</a>.</p>
+          <p class="note">Cette résistance n'est pas absolue&nbsp;: des tumeurs ont été observées chez l'axolotl, et la science cherche encore à l'expliquer. Pour aller plus loin&nbsp;: <a href="https://www.preprints.org/manuscript/202601.1486" target="_blank" rel="noopener">Lagunas-Rangel, « Are Axolotls Resistant to Cancer? Possible Explanations »</a>, une prépublication non relue par des pairs.</p>
           <p class="pull">Notre mission tient dans son nom&nbsp;: repérer tôt la croissance qui sort du cadre, pour que le médecin puisse agir à temps.</p>
           <p class="regen-caption">
             <span class="if-gl">Ci-contre, une patte de l'axolotl se reconstruit. Les points ambre qui sortent du cadre disparaissent&nbsp;: une image de ce que nous voulons repérer.</span>
@@ -157,7 +223,7 @@
 
     <section class="card reveal" id="produit" data-sec>
       <div class="card-head">
-        <p class="num" aria-hidden="true">03</p>
+        <p class="num" aria-hidden="true">04</p>
         <div>
           <p class="meta">Le produit</p>
           <h2>Un second regard sur chaque mammographie.</h2>
@@ -206,7 +272,7 @@
 
     <section class="card reveal" id="avantage" data-sec>
       <div class="card-head">
-        <p class="num" aria-hidden="true">04</p>
+        <p class="num" aria-hidden="true">05</p>
         <div>
           <p class="meta">Notre avantage</p>
           <h2>Pourquoi Axolotl, et pourquoi maintenant.</h2>
@@ -214,7 +280,7 @@
       </div>
       <div class="card-body">
         <div class="pairs stagger">
-          <div class="pair"><h3>Un modèle médical de pointe, déjà entraîné</h3><p>Les modèles ouverts comme MedGemma sont déjà entraînés sur des images médicales. Nous n'avons pas à financer des années de recherche fondamentale&nbsp;: chaque euro va à l'adaptation aux mammographies de la région et à la validation clinique.</p></div>
+          <div class="pair"><h3>Un modèle médical ouvert, que nous spécialisons</h3><p>MedGemma sait déjà lire des images médicales, mais il n'est pas spécialisé en mammographie. Nous le fine-tunons sur des mammographies publiques, puis régionales. Nous n'avons pas à financer des années de recherche fondamentale&nbsp;: chaque euro va à cette spécialisation et à la validation clinique.</p></div>
           <div class="pair"><h3>Une validation prévue sur des mammographies locales</h3><p>Une IA entraînée en Europe ou aux États-Unis voit d'autres patientes et d'autres mammographes. Nous prévoyons d'évaluer Axolotl avec des radiologues partenaires, sur des mammographies de la région, pendant le pilote clinique. Cette validation locale sera une barrière que les acteurs étrangers n'ont pas.</p></div>
           <div class="pair"><h3>Conçu pour le terrain</h3><p>Axolotl est conçu pour fonctionner avec les mammographes déjà en place, du CHU équipé d'un PACS au centre d'imagerie qui exporte ses clichés depuis un seul poste.</p></div>
           <div class="pair"><h3>Un marché régional d'un seul tenant</h3><p>Les huit pays de l'UEMOA partagent une langue de travail, une monnaie et un cadre régional. Depuis Cotonou, nous pouvons les couvrir avec un même produit et une même équipe.</p></div>
@@ -226,7 +292,7 @@
 
     <section class="card reveal" id="marche" data-sec>
       <div class="card-head">
-        <p class="num" aria-hidden="true">05</p>
+        <p class="num" aria-hidden="true">06</p>
         <div>
           <p class="meta">Le marché</p>
           <h2>Trois types de clients, un même produit.</h2>
@@ -256,7 +322,7 @@
 
     <section class="card reveal" id="feuille-de-route" data-sec>
       <div class="card-head">
-        <p class="num" aria-hidden="true">06</p>
+        <p class="num" aria-hidden="true">07</p>
         <div>
           <p class="meta">Feuille de route</p>
           <h2>Du prototype au déploiement régional.</h2>
@@ -290,7 +356,7 @@
 
     <section class="card reveal" id="investir" data-sec>
       <div class="card-head">
-        <p class="num" aria-hidden="true">07</p>
+        <p class="num" aria-hidden="true">08</p>
         <div>
           <p class="meta">Investir</p>
           <h2>Nous ouvrons notre premier tour de financement.</h2>
@@ -307,31 +373,20 @@
           </ul>
         </div>
 
-        <form name="investisseurs" method="POST" action="/merci" data-netlify="true" netlify-honeypot="bot-field">
+        <div class="contact-card">
           <p class="form-title">Recevoir le dossier investisseur</p>
-          <input type="hidden" name="form-name" value="investisseurs">
-          <input type="hidden" name="subject" value="Axolotl · nouveau contact investisseur (%{submissionId})">
-          <p class="hp"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
-          <div class="field"><label for="nom">Nom et prénom</label><input id="nom" name="nom" required autocomplete="name"></div>
-          <div class="field"><label for="structure">Fonds ou structure</label><input id="structure" name="structure" autocomplete="organization"></div>
-          <div class="field"><label for="profil">Vous êtes</label>
-            <select id="profil" name="profil" required>
-              <option value="">Choisir…</option>
-              <option>Fonds de capital-risque</option>
-              <option>Business angel</option>
-              <option>Investisseur à impact ou fondation</option>
-              <option>Institution de développement</option>
-              <option>Hôpital ou clinique (programme pilote)</option>
-              <option>Autre</option>
-            </select>
+          <p>Écrivez-nous en quelques lignes&nbsp;: qui vous êtes, votre structure, ce qui vous intéresse. Nous vous envoyons le dossier et vous proposons un appel sous une semaine. Établissements de santé, écrivez-nous aussi pour rejoindre le pilote.</p>
+          <a class="pill pill-dark" href="mailto:contact@valyon.co?subject=Dossier%20investisseur%20Axolotl&amp;body=Nom%20%3A%0D%0AStructure%20%3A%0D%0AVous%20%C3%AAtes%20%28fonds%2C%20business%20angel%2C%20%C3%A9tablissement%20de%20sant%C3%A9%E2%80%A6%29%20%3A%0D%0AMessage%20%3A%0D%0A">Écrire un e-mail</a>
+          <p class="contact-line">contact@valyon.co</p>
+          <div class="team">
+            <p class="meta">L'équipe fondatrice</p>
+            <ul>
+              <li><b>Jean-Baptiste Carmel Togninou Adikin</b><span>Co-fondateur et co-gérant</span></li>
+              <li><b>Yelian Constantin Zounmevo</b><span>Co-fondateur et co-gérant</span></li>
+            </ul>
           </div>
-          <div class="field"><label for="email">Email professionnel</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-          <div class="field full"><label for="message">Message (facultatif)</label><textarea id="message" name="message" placeholder="Thèse d'investissement, ticket envisagé, questions…"></textarea></div>
-          <div class="form-foot">
-            <small>Nous vous envoyons le dossier et vous proposons un appel sous une semaine. Vos données servent uniquement à vous répondre&nbsp;: voir la <a href="confidentialite.html">politique de confidentialité</a>.</small>
-            <button class="pill pill-dark" type="submit">Recevoir le dossier</button>
-          </div>
-        </form>
+          <small>Ce site ne collecte aucune donnée&nbsp;: votre message arrive directement dans notre messagerie. Voir la <a href="confidentialite.html">politique de confidentialité</a>.</small>
+        </div>
       </div>
     </section>
 
@@ -346,6 +401,7 @@
   <div class="foot-text">
     <p>Axolotl est un outil d'aide au diagnostic en cours de développement. Il ne remplace pas l'avis d'un médecin et n'est pas encore validé pour un usage clinique. Ce site ne constitue pas une offre de titres financiers.</p>
     <p>Axolotl s'appuie sur MedGemma. Gemma et MedGemma sont des marques de Google LLC ; Axolotl n'est ni affilié à Google ni approuvé par Google.</p>
+    <p>Contact&nbsp;: <a href="mailto:contact@valyon.co">contact@valyon.co</a></p>
     <p>© 2026 Axolotl, Cotonou, Bénin · <a href="mentions-legales.html">Mentions légales</a> · <a href="confidentialite.html">Politique de confidentialité</a></p>
   </div>
 </footer>

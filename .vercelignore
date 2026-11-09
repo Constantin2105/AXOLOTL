@@ -1,0 +1,8 @@
+# Working files kept in the repo but never deployed to the investor site
+tools
+docs
+tests
+.superpowers
+.playwright-mcp
+*.parts.png
+*.geo.png
