@@ -91,18 +91,18 @@ def test_head(new, before):
     assert "Bricolage" not in read("index.html")
 
 
-@pytest.mark.parametrize("page", ["index.html", "404.html", "mentions-legales.html", "confidentialite.html"])
+@pytest.mark.parametrize("page", ["index.html", "en.html", "404.html", "mentions-legales.html", "confidentialite.html"])
 def test_no_third_party_requests(page):
     """Fonts and three.js are served from our own host: no visitor IP goes to Google or Cloudflare."""
     root = parse(read(page))
     for n in root.iter():
-        if n.tag in ("link", "script", "img"):
+        if n.tag in ("link", "script", "img") and n.attrs.get("rel") != "alternate":
             ref = n.attrs.get("href") or n.attrs.get("src") or ""
             assert not ref.startswith(("http:", "https:", "//")), (page, ref)
 
 
 def test_fonts_self_hosted():
-    css = read("assets/site.v1.css")
+    css = read("assets/site.v2.css")
     files = re.findall(r"url\(\"?(fonts/[^)\"]+)\"?\)", css)
     assert len(files) == 3
     for f in files:
@@ -145,7 +145,7 @@ def test_no_fake_controls(new):
 
 
 def test_reveal_states_require_js_class():
-    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v1.css"), flags=re.S)
+    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v2.css"), flags=re.S)
     for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
         if not re.search(r"\.reveal|\.stagger|#title", sel):
             continue
@@ -160,29 +160,29 @@ def test_assets_versioned(new):
     local = [r for r in refs if r and r.lstrip("/").startswith("assets/")]
     assert local
     for r in local:
-        assert r.endswith(".svg") or ".v1." in r, r
+        assert r.endswith(".svg") or re.search(r"\.v\d+\.", r), r
 
 
 def test_ui_script_runs_before_three(new):
     srcs = [s.attrs.get("src") for s in new.find_all("script") if s.attrs.get("src")]
-    assert srcs.index("assets/site.v1.js") < srcs.index(THREE) < srcs.index("assets/axolotl.v1.js")
+    assert srcs.index("assets/site.v2.js") < srcs.index(THREE) < srcs.index("assets/axolotl.v1.js")
 
 
 def test_viewer_survives_missing_roundrect():
-    js = read("assets/site.v1.js")
+    js = read("assets/site.v2.js")
     assert "c.roundRect(" not in js          # every rounded rect goes through the fallback helper
     assert "finally" in js and "viewer.classList.add('done')" in js
 
 
 def test_gl_canvas_sized_by_renderer():
-    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v1.css"), flags=re.S)
+    css = re.sub(r"/\*.*?\*/", "", read("assets/site.v2.css"), flags=re.S)
     rule = re.search(r"#gl\s*\{([^}]*)\}", css).group(1)
     assert "100vh" not in rule and "100vw" not in rule
     assert "setSize(innerWidth, innerHeight, false)" not in read("assets/axolotl.v1.js")
 
 
 def test_desktop_hero_stage_starts_after_copy():
-    css = read("assets/site.v1.css")
+    css = read("assets/site.v2.css")
     rule = re.search(r"\.hero-stage \{ position: absolute;([^}]*)\}", css).group(1)
     assert "left: calc(var(--gutter) + var(--rail-space) + 540px)" in rule and "width" not in rule
 
@@ -223,7 +223,7 @@ def test_legal_page(page, title):
     text = root.text()
     assert "Code du numérique" in text
     assert "APDP" in text and "Autorité de protection des données à caractère personnel" in text
-    assert "assets/site.v1.css" in [l.attrs.get("href", "").lstrip("/") for l in root.find_all("link")]
+    assert "assets/site.v2.css" in [l.attrs.get("href", "").lstrip("/") for l in root.find_all("link")]
     assert root.find("script") is None     # plain text pages: no WebGL scene, no tracking
 
 
@@ -318,3 +318,91 @@ def test_early_detection_claim_sourced(new):
 
 def test_preprint_flagged(new):
     assert "prépublication non relue par des pairs" in new.find(id="axolotl").text()
+
+
+# ---------- Review of Nov 9, evening ----------
+
+def test_market_claims_match_evidence(new):
+    text = new.find(id="marche").text()
+    assert "progresse dans toute la sous-région" not in text
+    assert "passe aujourd'hui par les campagnes et les centres d'imagerie privés" in text
+    assert "concentrent la lecture sur quelques semaines" in text
+
+
+def test_axolotl_studied_for_regeneration(new):
+    text = new.find(id="axolotl").text()
+    assert "pour sa régénération" in text and "sans encore comprendre pourquoi" in text
+    assert "si rares que" not in text
+
+
+def test_no_euro(new):
+    text = new.text()
+    assert not re.search(r"euros?", text.lower())
+    assert "chaque franc investi" in text
+
+
+def test_benin_paragraph_closes_on_need(new):
+    text = new.find(id="ailleurs").text()
+    assert "radiologues spécialisés en sein manquent" in text
+    src = new.find(id="src-9")
+    assert src is not None and src.find("a").attrs["href"].startswith("https://www.lunduniversity.lu.se/")
+
+
+def test_relative_survival_contrast(new):
+    lede = new.find(id="probleme").find("p", cls="lede").text()
+    assert "survie relative" in lede and "32 %" in lede
+
+
+def test_health_data_promise_in_future(new):
+    text = new.find(id="avantage").text()
+    assert "seront chiffrées" in text and "sont chiffrées" not in text
+
+
+def test_adikin_background(new):
+    assert "IRISA" in new.find(id="investir").text()
+
+
+# ---------- English version ----------
+
+@pytest.fixture(scope="module")
+def en():
+    return parse(read("en.html"))
+
+
+ACCENTED_OK = {"Hernström", "Médicale", "Accessibilité", "l'imagerie", "prise", "Bénin", "Afr", "Imag", "Méd"}
+
+
+def test_english_page_structure(en, new):
+    assert en.find("html").attrs["lang"] == "en"
+    assert [n.attrs["id"] for n in en.iter() if "data-sec" in n.attrs] == SECTIONS
+    rail = [a.attrs["data-for"] for a in en.find("ul", cls="rail").find_all("a")]
+    assert rail == SECTIONS
+    assert en.find("form") is None
+    mail = [a.attrs["href"] for a in en.find(id="investir").find_all("a") if a.attrs.get("href", "").startswith("mailto:")]
+    assert mail and mail[0].startswith("mailto:" + CONTACT + "?subject=")
+    assert [s.attrs.get("src") for s in en.find_all("script") if s.attrs.get("src")] == \
+           [s.attrs.get("src") for s in new.find_all("script") if s.attrs.get("src")]
+    assert en.find("button", id="menu-toggle").attrs.get("data-close-label") == "Close"
+
+
+def test_english_page_is_in_english(en):
+    text = en.text()
+    for fr in ("Le problème", "mammographie", "radiologues", "Nous ", " les ", " des ", "Écrire"):
+        assert fr not in text, fr
+    for must in ("MASAI", "fine-tun", "Benin", "breast cancer", "contact@valyon.co", "IRISA"):
+        assert must in text, must
+
+
+def test_language_links(en, new):
+    def alts(root):
+        return {l.attrs["hreflang"]: l.attrs["href"] for l in root.find_all("link", rel="alternate")}
+    for root in (new, en):
+        assert alts(root) == {"fr": "https://axolotl.valyon.co/", "en": "https://axolotl.valyon.co/en",
+                              "x-default": "https://axolotl.valyon.co/"}
+    assert new.find("a", cls="lang").attrs["href"] == "/en"
+    assert en.find("a", cls="lang").attrs["href"] == "/"
+
+
+def test_menu_label_translatable():
+    js = read("assets/site.v2.js")
+    assert "dataset.closeLabel" in js and "dataset.openLabel" in js

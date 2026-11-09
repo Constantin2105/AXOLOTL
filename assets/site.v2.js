@@ -22,7 +22,7 @@
   function setMenu(open) {
     if (!menu) return;
     toggle.setAttribute('aria-expanded', String(open));
-    if (label) label.textContent = open ? 'Fermer' : 'Menu';
+    if (label) label.textContent = open ? (toggle.dataset.closeLabel || 'Fermer') : (toggle.dataset.openLabel || 'Menu');
     document.body.classList.toggle('menu-open', open);
     if (open) {
       menu.hidden = false;
@@ -77,14 +77,15 @@
   document.querySelectorAll('.reveal, .stagger').forEach(el => revealIO.observe(el));
 
   /* ---------- Counters: count up once, then put the original text back exactly ---------- */
-  const fmt = (v, d) => v.toFixed(d).replace('.', ',');
+  const decimalMark = document.documentElement.lang === 'en' ? '.' : ',';
+  const fmt = (v, d) => v.toFixed(d).replace('.', decimalMark);
   const countIO = new IntersectionObserver(entries => {
     for (const e of entries) {
       if (!e.isIntersecting) continue;
       countIO.unobserve(e.target);
       const el = e.target, original = el.innerHTML;
       const to = parseFloat(el.dataset.count), dec = parseInt(el.dataset.decimals || '0', 10);
-      const suffix = original.replace(/^[\d,]+/, '');
+      const suffix = original.replace(/^[\d.,]+/, '');
       const t0 = performance.now();
       const step = now => {
         const t = clamp((now - t0) / 1400, 0, 1);

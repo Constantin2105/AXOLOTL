@@ -8,6 +8,10 @@
 <meta property="og:title" content="Axolotl — L'IA qui repère le cancer du sein à temps">
 <meta property="og:description" content="Une IA d'aide à la lecture des mammographies pour le dépistage du cancer du sein, pensée pour les hôpitaux et cliniques d'Afrique de l'Ouest. Premier tour de financement ouvert.">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<link rel="alternate" hreflang="fr" href="https://axolotl.valyon.co/">
+<link rel="alternate" hreflang="en" href="https://axolotl.valyon.co/en">
+<link rel="alternate" hreflang="x-default" href="https://axolotl.valyon.co/">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/svg+xml" href="/assets/axolotl-mark.svg">
 <script>
@@ -15,8 +19,8 @@
   (function (d) { d.classList.replace('no-js', 'js'); setTimeout(function () { if (!d.classList.contains('ui')) d.classList.replace('js', 'no-js'); }, 2500); })(document.documentElement);
 </script>
 <link rel="preload" href="assets/fonts/inter-tight-latin.v1.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/site.v1.css">
-<script src="assets/site.v1.js" defer></script>
+<link rel="stylesheet" href="assets/site.v2.css">
+<script src="assets/site.v2.js" defer></script>
 <script src="assets/vendor/three.r128.v1.min.js" defer></script>
 <script src="assets/axolotl.v1.js" defer></script>
 </head>
@@ -27,13 +31,16 @@
 <header class="top">
   <div class="top-left">
     <a class="brand" href="#intro" aria-label="Axolotl, accueil">Axolotl</a>
-    <button class="menu-btn" id="menu-toggle" type="button" aria-controls="menu" aria-expanded="false">
+    <button class="menu-btn" id="menu-toggle" type="button" aria-controls="menu" aria-expanded="false" data-open-label="Menu" data-close-label="Fermer">
       <i aria-hidden="true"></i><span class="menu-label">Menu</span>
     </button>
   </div>
-  <a class="to-invest" href="#investir" aria-label="Investir">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-  </a>
+  <div class="top-right">
+    <a class="lang" href="/en" hreflang="en" lang="en" aria-label="English version">EN</a>
+    <a class="to-invest" href="#investir" aria-label="Investir">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+    </a>
+  </div>
 </header>
 
 <nav class="menu" id="menu" hidden aria-label="Menu principal">
@@ -100,7 +107,7 @@
         </div>
       </div>
       <div class="card-body">
-        <p class="lede">Un cancer du sein repéré tôt se soigne dans la grande majorité des cas&nbsp;: aux États-Unis, à un stade localisé, la survie à cinq ans dépasse 99&nbsp;%.<sup><a href="#src-1" aria-label="Source 1">1</a></sup> Repéré tard, il devient souvent mortel. La différence se joue sur l'image, et sur le temps qu'il faut pour qu'un spécialiste la lise.</p>
+        <p class="lede">Un cancer du sein repéré tôt se soigne dans la grande majorité des cas&nbsp;: aux États-Unis, à un stade localisé, la survie relative à cinq ans dépasse 99&nbsp;%. Repéré tard, quand il s'est déjà propagé à distance, elle tombe à 32&nbsp;%.<sup><a href="#src-1" aria-label="Source 1">1</a></sup> La différence se joue sur l'image, et sur le temps qu'il faut pour qu'un spécialiste la lise.</p>
         <div class="figures stagger">
           <div class="figure">
             <p class="num-figure" data-count="1.15" data-decimals="2">1,15&nbsp;M</p>
@@ -153,7 +160,7 @@
 
         <div class="adapt">
           <h3>Ce qu'il faut adapter chez nous</h3>
-          <p class="body-text">Ces résultats ont été obtenus dans un seul pays, avec un seul type de mammographe et un seul logiciel d'IA.<sup><a href="#src-7" aria-label="Source 7">7</a></sup> Rien ne garantit qu'ils se transposent tels quels à d'autres appareils, à d'autres patientes et à un autre système de santé. Au Bénin, une étude menée dans les hôpitaux publics conclut que l'imagerie indispensable à la prise en charge du cancer du sein y reste très peu accessible, et recommande de créer un programme national de dépistage par mammographie.<sup><a href="#src-8" aria-label="Source 8">8</a></sup></p>
+          <p class="body-text">Ces résultats ont été obtenus dans un seul pays, avec un seul type de mammographe et un seul logiciel d'IA.<sup><a href="#src-7" aria-label="Source 7">7</a></sup> Rien ne garantit qu'ils se transposent tels quels à d'autres appareils, à d'autres patientes et à un autre système de santé. Au Bénin, une étude menée dans les hôpitaux publics conclut que l'imagerie indispensable à la prise en charge du cancer du sein y reste très peu accessible, et recommande de créer un programme national de dépistage par mammographie.<sup><a href="#src-8" aria-label="Source 8">8</a></sup> C'est là que l'IA peut le plus aider&nbsp;: même en Suède, où les radiologues spécialisés en sein manquent, elle a réduit de 44&nbsp;% leur travail de lecture.<sup><a href="#src-9" aria-label="Source 9">9</a></sup></p>
           <p class="body-text">Axolotl s'appuie sur MedGemma, un modèle médical ouvert mais généraliste, qui n'est pas spécialisé en mammographie. Notre méthode tient en trois étapes&nbsp;:</p>
           <ol class="steps stagger">
             <li class="step">
@@ -190,6 +197,7 @@
           <li id="src-6">Hernström V. et al., « Screening performance and characteristics of breast cancer detected in the Mammography Screening with Artificial Intelligence trial (MASAI) », <a href="https://doi.org/10.1016/S2589-7500(24)00267-X" target="_blank" rel="noopener">The Lancet Digital Health, 2025, 7(3), 175–183</a>.</li>
           <li id="src-7">Gommers J. et al., « Interval cancer, sensitivity, and specificity comparing AI-supported mammography screening with standard double reading without AI in the MASAI study », <a href="https://doi.org/10.1016/S0140-6736(25)02464-X" target="_blank" rel="noopener">The Lancet, 2026, 407(10527), 505–514</a>.</li>
           <li id="src-8">Yekpe Ahouansou P. et al., « Accessibilité à l'imagerie dans la prise en charge des cancers du sein en milieu hospitalier au Bénin », <a href="https://www.ajol.info/index.php/jaim/article/view/239787" target="_blank" rel="noopener">Journal Africain d'Imagerie Médicale, 2022, 14(1), 8–13</a>.</li>
+          <li id="src-9">Université de Lund, <a href="https://www.lunduniversity.lu.se/article/ai-support-breast-cancer-screening-fewer-missed-cancer-cases" target="_blank" rel="noopener">« AI support in breast cancer screening: Fewer missed cancer cases »</a>, 30 janvier 2026.</li>
         </ol>
       </div>
     </section>
@@ -210,7 +218,7 @@
         </div>
         <div class="card-body prose">
           <p>Cette petite salamandre mexicaine fait repousser une patte entière&nbsp;: os, muscles, nerfs, peau. Elle régénère aussi sa queue, sa moelle épinière, son cœur et des parties de son cerveau.</p>
-          <p>La croissance reste disciplinée et s'arrête quand le membre est complet. Les tumeurs y sont si rares que les laboratoires du monde entier l'étudient pour comprendre comment le vivant garde le contrôle.</p>
+          <p>La croissance reste disciplinée et s'arrête quand le membre est complet. Les laboratoires du monde entier l'étudient pour sa régénération. On le soupçonne aussi de résister au cancer, sans encore comprendre pourquoi.</p>
           <p class="note">Cette résistance n'est pas absolue&nbsp;: des tumeurs ont été observées chez l'axolotl, et la science cherche encore à l'expliquer. Pour aller plus loin&nbsp;: <a href="https://www.preprints.org/manuscript/202601.1486" target="_blank" rel="noopener">Lagunas-Rangel, « Are Axolotls Resistant to Cancer? Possible Explanations »</a>, une prépublication non relue par des pairs.</p>
           <p class="pull">Notre mission tient dans son nom&nbsp;: repérer tôt la croissance qui sort du cadre, pour que le médecin puisse agir à temps.</p>
           <p class="regen-caption">
@@ -280,12 +288,12 @@
       </div>
       <div class="card-body">
         <div class="pairs stagger">
-          <div class="pair"><h3>Un modèle médical ouvert, que nous spécialisons</h3><p>MedGemma sait déjà lire des images médicales, mais il n'est pas spécialisé en mammographie. Nous le fine-tunons sur des mammographies publiques, puis régionales. Nous n'avons pas à financer des années de recherche fondamentale&nbsp;: chaque euro va à cette spécialisation et à la validation clinique.</p></div>
+          <div class="pair"><h3>Un modèle médical ouvert, que nous spécialisons</h3><p>MedGemma sait déjà lire des images médicales, mais il n'est pas spécialisé en mammographie. Nous le fine-tunons sur des mammographies publiques, puis régionales. Nous n'avons pas à financer des années de recherche fondamentale&nbsp;: chaque franc investi va à cette spécialisation et à la validation clinique.</p></div>
           <div class="pair"><h3>Une validation prévue sur des mammographies locales</h3><p>Une IA entraînée en Europe ou aux États-Unis voit d'autres patientes et d'autres mammographes. Nous prévoyons d'évaluer Axolotl avec des radiologues partenaires, sur des mammographies de la région, pendant le pilote clinique. Cette validation locale sera une barrière que les acteurs étrangers n'ont pas.</p></div>
           <div class="pair"><h3>Conçu pour le terrain</h3><p>Axolotl est conçu pour fonctionner avec les mammographes déjà en place, du CHU équipé d'un PACS au centre d'imagerie qui exporte ses clichés depuis un seul poste.</p></div>
           <div class="pair"><h3>Un marché régional d'un seul tenant</h3><p>Les huit pays de l'UEMOA partagent une langue de travail, une monnaie et un cadre régional. Depuis Cotonou, nous pouvons les couvrir avec un même produit et une même équipe.</p></div>
           <div class="pair"><h3>Le médecin garde la main</h3><p>Chaque signalement est expliqué&nbsp;: position, taille, nature de l'anomalie. Le radiologue juge, et c'est ce qui rend l'outil adoptable par les équipes médicales.</p></div>
-          <div class="pair"><h3>Les données de santé protégées</h3><p>Les mammographies sont chiffrées, traitées uniquement pour l'analyse et jamais revendues. Chaque établissement garde la main sur ses images.</p></div>
+          <div class="pair"><h3>Les données de santé protégées</h3><p>Les mammographies seront chiffrées, traitées uniquement pour l'analyse et jamais revendues. Chaque établissement gardera la main sur ses images.</p></div>
         </div>
       </div>
     </section>
@@ -299,7 +307,7 @@
         </div>
       </div>
       <div class="card-body">
-        <p class="lede">Le dépistage du cancer du sein progresse dans toute la sous-région, porté par les campagnes nationales et les centres d'imagerie privés. Chacun a besoin de lire plus de mammographies avec les mêmes radiologues.</p>
+        <p class="lede">Le dépistage du cancer du sein passe aujourd'hui par les campagnes et les centres d'imagerie privés. Chacun doit lire plus de mammographies avec les mêmes radiologues.</p>
         <div class="buyers stagger">
           <div class="buyer">
             <h3>Cliniques et centres d'imagerie privés</h3>
@@ -313,7 +321,7 @@
           </div>
           <div class="buyer">
             <h3>Programmes de dépistage</h3>
-            <p>Ministères, ONG et campagnes comme Octobre rose doivent lire des milliers de mammographies en quelques semaines.</p>
+            <p>Ministères, ONG et campagnes comme Octobre rose concentrent la lecture sur quelques semaines.</p>
             <p class="price">Tarif par mammographie analysée</p>
           </div>
         </div>
@@ -381,7 +389,7 @@
           <div class="team">
             <p class="meta">L'équipe fondatrice</p>
             <ul>
-              <li><b>Jean-Baptiste Carmel Togninou Adikin</b><span>Co-fondateur et co-gérant</span></li>
+              <li><b>Jean-Baptiste Carmel Togninou Adikin</b><span>Co-fondateur et co-gérant. Recherche à l'IRISA et chez Inria, sécurité des systèmes.</span></li>
               <li><b>Yelian Constantin Zounmevo</b><span>Co-fondateur et co-gérant</span></li>
             </ul>
           </div>

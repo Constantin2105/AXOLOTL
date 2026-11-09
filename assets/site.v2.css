@@ -320,6 +320,11 @@ sup a { text-decoration: none; color: var(--magenta); font-size: 11px; padding-l
 @media (max-width: 760px) { .needs ul { grid-template-columns: 1fr; } }
 @media (max-width: 520px) { .figures-2 { grid-template-columns: 1fr; } }
 
+/* Language switch */
+.top-right { display: flex; align-items: center; gap: 12px; }
+.lang { font: 500 12px var(--mono); letter-spacing: .08em; text-decoration: none; color: var(--ink); padding: 8px 10px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, .7); }
+.lang:hover, .lang:focus-visible { border-color: var(--ink); }
+
 /* ---------- Footer ---------- */
 .foot {
   position: relative; z-index: 1; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px;

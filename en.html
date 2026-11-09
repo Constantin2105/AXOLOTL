@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Axolotl — The AI that spots breast cancer in time</title>
+<meta name="description" content="Axolotl is an AI that helps radiologists read mammograms and flags early signs of breast cancer. We are starting in French-speaking West Africa and opening our first funding round.">
+<meta property="og:title" content="Axolotl — The AI that spots breast cancer in time">
+<meta property="og:description" content="An AI that helps radiologists read mammograms for breast cancer screening, built for hospitals and clinics in West Africa. First funding round open.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<link rel="alternate" hreflang="fr" href="https://axolotl.valyon.co/">
+<link rel="alternate" hreflang="en" href="https://axolotl.valyon.co/en">
+<link rel="alternate" hreflang="x-default" href="https://axolotl.valyon.co/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/svg+xml" href="/assets/axolotl-mark.svg">
+<script>
+  // Hidden-before-reveal states only apply while the UI script runs; if it never starts, show everything.
+  (function (d) { d.classList.replace('no-js', 'js'); setTimeout(function () { if (!d.classList.contains('ui')) d.classList.replace('js', 'no-js'); }, 2500); })(document.documentElement);
+</script>
+<link rel="preload" href="assets/fonts/inter-tight-latin.v1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.v2.css">
+<script src="assets/site.v2.js" defer></script>
+<script src="assets/vendor/three.r128.v1.min.js" defer></script>
+<script src="assets/axolotl.v1.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#probleme">Skip to content</a>
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<header class="top">
+  <div class="top-left">
+    <a class="brand" href="#intro" aria-label="Axolotl, home">Axolotl</a>
+    <button class="menu-btn" id="menu-toggle" type="button" aria-controls="menu" aria-expanded="false" data-open-label="Menu" data-close-label="Close">
+      <i aria-hidden="true"></i><span class="menu-label">Menu</span>
+    </button>
+  </div>
+  <div class="top-right">
+    <a class="lang" href="/" hreflang="fr" lang="fr" aria-label="Version française">FR</a>
+    <a class="to-invest" href="#investir" aria-label="Invest">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+    </a>
+  </div>
+</header>
+
+<nav class="menu" id="menu" hidden aria-label="Main menu">
+  <ol class="menu-list">
+    <li><a href="#intro"><span>00</span>Intro</a></li>
+    <li><a href="#probleme"><span>01</span>The problem</a></li>
+    <li><a href="#ailleurs"><span>02</span>What worked elsewhere</a></li>
+    <li><a href="#axolotl"><span>03</span>Why the name</a></li>
+    <li><a href="#produit"><span>04</span>The product</a></li>
+    <li><a href="#avantage"><span>05</span>Our edge</a></li>
+    <li><a href="#marche"><span>06</span>The market</a></li>
+    <li><a href="#feuille-de-route"><span>07</span>Roadmap</a></li>
+    <li><a href="#investir"><span>08</span>Invest and contact us</a></li>
+  </ol>
+  <a class="pill pill-dark menu-cta" href="#investir">Get the investor deck</a>
+</nav>
+
+<ul class="rail" aria-label="Sections">
+  <span class="dot" aria-hidden="true"></span>
+  <li><a href="#intro" data-for="intro">Intro</a></li>
+  <li><a href="#probleme" data-for="probleme">The problem</a></li>
+  <li><a href="#ailleurs" data-for="ailleurs">Evidence</a></li>
+  <li><a href="#axolotl" data-for="axolotl">Axolotl</a></li>
+  <li><a href="#produit" data-for="produit">Product</a></li>
+  <li><a href="#avantage" data-for="avantage">Edge</a></li>
+  <li><a href="#marche" data-for="marche">Market</a></li>
+  <li><a href="#feuille-de-route" data-for="feuille-de-route">Roadmap</a></li>
+  <li><a href="#investir" data-for="investir">Invest</a></li>
+</ul>
+
+<main>
+  <section class="hero" id="intro" data-sec>
+    <div class="hero-copy">
+      <p class="eyebrow fade">Axolotl's mission</p>
+      <h1 id="title">The AI that spots breast cancer in&nbsp;time.</h1>
+      <p class="lede fade">Axolotl reads mammograms and shows radiologists which areas to check first. We are starting where the need is greatest: West Africa, where there are too few radiologists to read every mammogram in time.</p>
+      <div class="hero-actions fade">
+        <a class="pill" href="#investir">Get the investor deck</a>
+        <a class="textlink" href="#produit">See the product</a>
+      </div>
+      <ul class="proof fade">
+        <li><b>Built on MedGemma</b> by Google</li>
+        <li><b>Based in Cotonou</b>, Benin</li>
+        <li><b>First round</b> open</li>
+      </ul>
+    </div>
+    <div class="hero-stage" aria-hidden="true">
+      <img class="axo-poster" src="assets/axolotl-poster.v1.webp" alt="" width="720" height="880">
+    </div>
+    <a class="scroll-cue fade" href="#probleme">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v16M5 13l7 7 7-7"/></svg>
+      Scroll to explore
+    </a>
+  </section>
+
+  <div class="sections">
+
+    <section class="card reveal" id="probleme" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">01</p>
+        <div>
+          <p class="meta">The problem</p>
+          <h2>In Africa, breast cancer kills first because it is found too late.</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="lede">Breast cancer found early can be treated in the vast majority of cases: in the United States, the five-year relative survival rate is above 99% at a localized stage. Found late, once it has spread to distant organs, it falls to 32%.<sup><a href="#src-1" aria-label="Source 1">1</a></sup> The difference lies in the image, and in how long it takes a specialist to read it.</p>
+        <div class="figures stagger">
+          <div class="figure">
+            <p class="num-figure" data-count="1.15" data-decimals="2">1.15&nbsp;M</p>
+            <p>new cancer cases in Africa in 2022, and about 754,500 deaths.<sup><a href="#src-2" aria-label="Source 2">2</a></sup></p>
+          </div>
+          <div class="figure">
+            <p class="num-figure" data-count="2.1" data-decimals="1">2.1&nbsp;M</p>
+            <p>new cases a year expected by 2040, as the population grows and ages.<sup><a href="#src-3" aria-label="Source 3">3</a></sup></p>
+          </div>
+          <div class="figure">
+            <p class="num-figure" data-count="44" data-decimals="0">44&nbsp;<small>%</small></p>
+            <p>five-year survival for breast cancer in sub-Saharan Africa. Half of patients are diagnosed at stage III.<sup><a href="#src-4" aria-label="Source 4">4</a></sup></p>
+          </div>
+          <div class="figure">
+            <p class="num-figure" data-count="3" data-decimals="0">3&nbsp;<small>/ million</small></p>
+            <p>radiologists per million people in Ghana, against 100 to 120 recommended.<sup><a href="#src-5" aria-label="Source 5">5</a></sup></p>
+          </div>
+        </div>
+        <ol class="sources">
+          <li id="src-1">American Cancer Society, <a href="https://www.cancer.org/cancer/types/breast-cancer/understanding-a-breast-cancer-diagnosis/breast-cancer-survival-rates.html" target="_blank" rel="noopener">“Survival Rates for Breast Cancer”</a>, SEER data, women diagnosed between 2015 and 2021.</li>
+          <li id="src-2">International Agency for Research on Cancer (IARC), GLOBOCAN 2022 estimates.</li>
+          <li id="src-3">Projected cancer burden in Africa by 2040, <a href="https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2022.839835/full" target="_blank" rel="noopener">Frontiers in Public Health, 2022</a>.</li>
+          <li id="src-4">“Prognostic factors of breast cancer and survival in Sub-Saharan Africa”, systematic review and meta-analysis, 85 studies, 33,053 patients, 2025.</li>
+          <li id="src-5">“Density and regional distribution of radiologists in a low-income country: the Ghana situation”, 2023.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card reveal" id="ailleurs" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">02</p>
+        <div>
+          <p class="meta">What worked elsewhere</p>
+          <h2>In Sweden, AI already helps radiologists find more breast cancers.</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="lede">Between 2021 and 2022, the MASAI trial enrolled nearly 106,000 women screened in Sweden. Half had the usual reading by two radiologists. For the other half, reading was supported by AI, and the radiologist kept the final decision.<sup><a href="#src-6" aria-label="Source 6">6</a></sup></p>
+        <div class="figures figures-2 stagger">
+          <div class="figure">
+            <p class="num-figure">+29&nbsp;<small>%</small></p>
+            <p>more cancers detected, with no increase in false alarms.<sup><a href="#src-6" aria-label="Source 6">6</a></sup></p>
+          </div>
+          <div class="figure">
+            <p class="num-figure">−44&nbsp;<small>%</small></p>
+            <p>less reading work for radiologists.<sup><a href="#src-6" aria-label="Source 6">6</a></sup></p>
+          </div>
+        </div>
+        <p class="body-text">The final results, published in <i>The Lancet</i> in 2026, show that AI-supported reading does not let more cancers slip through between two screenings, and that fewer of those cancers are aggressive.<sup><a href="#src-7" aria-label="Source 7">7</a></sup></p>
+
+        <div class="adapt">
+          <h3>What has to be adapted here</h3>
+          <p class="body-text">These results come from one country, with one type of mammography machine and one AI system.<sup><a href="#src-7" aria-label="Source 7">7</a></sup> Nothing guarantees they carry over as they are to other machines, other patients and another health system. In Benin, a study in public hospitals concludes that the imaging needed for breast cancer care remains very hard to access, and recommends creating a national mammography screening programme.<sup><a href="#src-8" aria-label="Source 8">8</a></sup> This is where AI can help most: even in Sweden, where breast radiologists are in short supply, it cut their reading work by 44%.<sup><a href="#src-9" aria-label="Source 9">9</a></sup></p>
+          <p class="body-text">Axolotl is built on MedGemma, an open but general-purpose medical model that is not specialised in mammography. Our method has three steps:</p>
+          <ol class="steps stagger">
+            <li class="step">
+              <span class="n">1. Evaluate</span>
+              <h3>The starting point</h3>
+              <p>Test MedGemma as it is on mammograms, to measure what it can already do.</p>
+            </li>
+            <li class="step">
+              <span class="n">2. Adapt</span>
+              <h3>Fine-tuning</h3>
+              <p>Specialise the model by fine-tuning it, first on public mammograms, then on mammograms from the region.</p>
+            </li>
+            <li class="step">
+              <span class="n">3. Re-evaluate</span>
+              <h3>With our radiologists</h3>
+              <p>Measure the gain on local mammograms, with our partner radiologists, before any clinical use.</p>
+            </li>
+          </ol>
+          <p class="pull">As in MASAI, Axolotl flags and the radiologist decides.</p>
+        </div>
+
+        <div class="needs" id="besoins">
+          <h3>What we need</h3>
+          <ul>
+            <li><b>Compute</b><span>to evaluate MedGemma, fine-tune it and measure the gain.</span></li>
+            <li><b>A starting dataset</b><span>public mammograms for the first evaluation, then local mammograms collected with our partners, with authorisation from Benin's data protection authority (APDP) and an ethics committee's approval.</span></li>
+            <li><b>Partner radiologists</b><span>to annotate mammograms and run the validation.</span></li>
+            <li><b>Initial funding</b><span>to run the clinical pilot in Benin.</span></li>
+          </ul>
+          <p>Can you help with any of these? Write to us: <a href="mailto:contact@valyon.co">contact@valyon.co</a>.</p>
+        </div>
+
+        <ol class="sources" start="6">
+          <li id="src-6">Hernström V. et al., “Screening performance and characteristics of breast cancer detected in the Mammography Screening with Artificial Intelligence trial (MASAI)”, <a href="https://doi.org/10.1016/S2589-7500(24)00267-X" target="_blank" rel="noopener">The Lancet Digital Health, 2025, 7(3), 175–183</a>.</li>
+          <li id="src-7">Gommers J. et al., “Interval cancer, sensitivity, and specificity comparing AI-supported mammography screening with standard double reading without AI in the MASAI study”, <a href="https://doi.org/10.1016/S0140-6736(25)02464-X" target="_blank" rel="noopener">The Lancet, 2026, 407(10527), 505–514</a>.</li>
+          <li id="src-8">Yekpe Ahouansou P. et al., “Access to imaging for breast cancer care in hospitals in Benin” (in French), <a href="https://www.ajol.info/index.php/jaim/article/view/239787" target="_blank" rel="noopener">Journal Africain d'Imagerie Médicale, 2022, 14(1), 8–13</a>.</li>
+          <li id="src-9">Lund University, <a href="https://www.lunduniversity.lu.se/article/ai-support-breast-cancer-screening-fewer-missed-cancer-cases" target="_blank" rel="noopener">“AI support in breast cancer screening: Fewer missed cancer cases”</a>, 30 January 2026.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card card-open" id="axolotl" data-sec>
+      <div class="regen-stage" aria-hidden="true">
+        <div class="regen-sticky" data-axolotl-stage>
+          <img class="axo-poster" src="assets/axolotl-poster.v1.webp" alt="" width="720" height="880" loading="lazy">
+        </div>
+      </div>
+      <div class="panel reveal">
+        <div class="card-head">
+          <p class="num" aria-hidden="true">03</p>
+          <div>
+            <p class="meta">Why the name</p>
+            <h2>The axolotl rebuilds what it loses, without growth running out of control.</h2>
+          </div>
+        </div>
+        <div class="card-body prose">
+          <p>This small Mexican salamander can regrow a whole leg: bone, muscle, nerves and skin. It also regenerates its tail, spinal cord, heart and parts of its brain.</p>
+          <p>The growth stays orderly and stops once the limb is complete. Laboratories around the world study it for its regeneration. It is also suspected of resisting cancer, though no one yet understands why.</p>
+          <p class="note">This resistance is not absolute: tumours have been observed in axolotls, and science is still trying to explain it. Further reading: <a href="https://www.preprints.org/manuscript/202601.1486" target="_blank" rel="noopener">Lagunas-Rangel, “Are Axolotls Resistant to Cancer? Possible Explanations”</a>, a preprint that has not been peer reviewed.</p>
+          <p class="pull">Our mission is in its name: spot growth that steps out of line early, so the doctor can act in time.</p>
+          <p class="regen-caption">
+            <span class="if-gl">Here, an axolotl leg rebuilds itself. The amber dots that step out of line disappear: a picture of what we want to spot.</span>
+            <span class="if-still">In the axolotl, a whole leg rebuilds itself, then growth stops on its own.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card reveal" id="produit" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">04</p>
+        <div>
+          <p class="meta">The product</p>
+          <h2>A second look at every mammogram.</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="lede">Axolotl fits into the radiology department's workflow. Suspicious mammograms move to the top of the list, and the radiologist sees right away where to look.</p>
+        <ol class="steps stagger">
+          <li class="step">
+            <span class="n">1. Import</span>
+            <h3>The mammogram arrives</h3>
+            <p>Images are sent in DICOM format, from the hospital's PACS or a single workstation.</p>
+          </li>
+          <li class="step">
+            <span class="n">2. Analysis</span>
+            <h3>The AI flags</h3>
+            <p>The model scans each image, outlines and measures unusual areas, and ranks mammograms by urgency.</p>
+          </li>
+          <li class="step">
+            <span class="n">3. Decision</span>
+            <h3>The radiologist decides</h3>
+            <p>They confirm, correct or dismiss each flag. The diagnosis always stays in their hands.</p>
+          </li>
+        </ol>
+      </div>
+      <div class="viewer">
+        <div class="viewer-image" role="img" aria-label="Example grayscale mammogram with two areas circled in amber.">
+          <canvas id="scan"></canvas>
+          <span class="scanline" aria-hidden="true"></span>
+          <div class="hud"><span>MG · LEFT MLO</span><span>EX-2026-0418</span></div>
+        </div>
+        <div class="viewer-side">
+          <div>
+            <p class="meta">Analysis done in 38 s</p>
+            <h3>2 areas to check</h3>
+          </div>
+          <div class="zones">
+            <div class="zone"><span class="badge">1</span><b>Upper outer quadrant</b><span>Ø 8.4 mm, focal asymmetry</span></div>
+            <div class="zone"><span class="badge">2</span><b>Retroareolar region</b><span>Ø 5.1 mm, microcalcifications</span></div>
+          </div>
+          <p class="verdict"><strong>Radiologist review required.</strong> Axolotl flags, it does not diagnose.</p>
+        </div>
+      </div>
+      <p class="fictive">Example interface. Synthetic image and fictional data.</p>
+    </section>
+
+    <section class="card reveal" id="avantage" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">05</p>
+        <div>
+          <p class="meta">Our edge</p>
+          <h2>Why Axolotl, and why now.</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="pairs stagger">
+          <div class="pair"><h3>An open medical model that we specialise</h3><p>MedGemma can already read medical images, but it is not specialised in mammography. We fine-tune it on public mammograms, then on regional ones. We do not have to fund years of basic research: every franc invested goes into this specialisation and into clinical validation.</p></div>
+          <div class="pair"><h3>Validation planned on local mammograms</h3><p>An AI trained in Europe or the United States sees other patients and other machines. We plan to evaluate Axolotl with partner radiologists, on mammograms from the region, during the clinical pilot. This local validation will be a barrier that foreign players do not have.</p></div>
+          <div class="pair"><h3>Built for the field</h3><p>Axolotl is designed to work with the mammography machines already in place, from teaching hospitals with a PACS to imaging centres that export images from a single workstation.</p></div>
+          <div class="pair"><h3>One regional market</h3><p>The eight WAEMU countries share a working language, a currency and a regional framework. From Cotonou, we can serve them with one product and one team.</p></div>
+          <div class="pair"><h3>The doctor stays in charge</h3><p>Every flag is explained: position, size, type of finding. The radiologist judges, and that is what makes the tool acceptable to medical teams.</p></div>
+          <div class="pair"><h3>Protected health data</h3><p>Mammograms will be encrypted, processed only for the analysis and never sold. Each facility will stay in control of its images.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card reveal" id="marche" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">06</p>
+        <div>
+          <p class="meta">The market</p>
+          <h2>Three kinds of customers, one product.</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="lede">Breast cancer screening today goes through campaigns and private imaging centres. Each of them has to read more mammograms with the same radiologists.</p>
+        <div class="buyers stagger">
+          <div class="buyer">
+            <h3>Private clinics and imaging centres</h3>
+            <p>They want to deliver reports faster and make reading safer.</p>
+            <p class="price">Monthly subscription per site, with a volume of mammograms included</p>
+          </div>
+          <div class="buyer">
+            <h3>Public and teaching hospitals</h3>
+            <p>They face long waiting lists and lack specialists.</p>
+            <p class="price">Annual licence with deployment and staff training</p>
+          </div>
+          <div class="buyer">
+            <h3>Screening programmes</h3>
+            <p>Ministries, NGOs and campaigns such as Pink October concentrate reading into a few weeks.</p>
+            <p class="price">Price per mammogram analysed</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card reveal" id="feuille-de-route" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">07</p>
+        <div>
+          <p class="meta">Roadmap</p>
+          <h2>From prototype to regional rollout.</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <ol class="road">
+          <li class="done">
+            <span class="when">Step 1</span>
+            <h3>Prototype</h3>
+            <p>Mammogram reading on MedGemma, review interface for the radiologist.</p>
+          </li>
+          <li class="now">
+            <span class="when">Step 2, in preparation</span>
+            <h3>Clinical pilot in Benin</h3>
+            <p>Finding partner hospitals and clinics, ahead of the first real mammograms.</p>
+          </li>
+          <li>
+            <span class="when">Step 3</span>
+            <h3>Validation and compliance</h3>
+            <p>Performance study on mammograms with partner radiologists, regulatory steps.</p>
+          </li>
+          <li>
+            <span class="when">Step 4</span>
+            <h3>WAEMU rollout</h3>
+            <p>First commercial contracts and expansion to neighbouring countries.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card reveal" id="investir" data-sec>
+      <div class="card-head">
+        <p class="num" aria-hidden="true">08</p>
+        <div>
+          <p class="meta">Invest</p>
+          <h2>We are opening our first funding round.</h2>
+        </div>
+      </div>
+      <div class="card-body raise">
+        <div class="raise-copy">
+          <p class="lede">We are looking for investors who know health, AI or West Africa, and who want to be part of it from the start. The funds will go to:</p>
+          <ul class="uses">
+            <li><b>Running the clinical pilot</b><span>Deploy Axolotl in the first partner facilities and measure its performance.</span></li>
+            <li><b>Growing the team</b><span>AI engineers, a medical lead and a deployment lead.</span></li>
+            <li><b>Getting the approvals</b><span>Clinical study, regulatory compliance and health data protection.</span></li>
+            <li><b>Signing the first customers</b><span>Private clinics and screening programmes in Benin, then across the region.</span></li>
+          </ul>
+        </div>
+
+        <div class="contact-card">
+          <p class="form-title">Get the investor deck</p>
+          <p>Write us a few lines: who you are, your organisation, what interests you. We will send you the deck and suggest a call within a week. Healthcare facilities, write to us too if you would like to join the pilot.</p>
+          <a class="pill pill-dark" href="mailto:contact@valyon.co?subject=Axolotl%20investor%20deck&amp;body=Name%3A%0D%0AOrganisation%3A%0D%0AYou%20are%20%28fund%2C%20business%20angel%2C%20healthcare%20facility%E2%80%A6%29%3A%0D%0AMessage%3A%0D%0A">Send an email</a>
+          <p class="contact-line">contact@valyon.co</p>
+          <div class="team">
+            <p class="meta">Founding team</p>
+            <ul>
+              <li><b>Jean-Baptiste Carmel Togninou Adikin</b><span>Co-founder and co-manager. Research at IRISA and Inria, systems security.</span></li>
+              <li><b>Yelian Constantin Zounmevo</b><span>Co-founder and co-manager</span></li>
+            </ul>
+          </div>
+          <small>This site collects no data: your message goes straight to our inbox. See our <a href="confidentialite.html">privacy policy</a> (in French).</small>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <a class="foot-brand" href="#intro" aria-label="Axolotl, back to top">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#e8708a" stroke-width="5" stroke-linecap="round"><path d="M21.2 30.2Q22.3 23.4 19 17.4"/><path d="M17.7 32.9Q15.1 26 9.1 21.8"/><path d="M15.4 36.2Q10.9 31.6 4.5 31.1"/><path d="M42.8 30.2Q41.7 23.4 45 17.4"/><path d="M46.3 32.9Q48.9 26 54.9 21.8"/><path d="M48.6 36.2Q53.1 31.6 59.5 31.1"/></g><ellipse cx="32" cy="40" rx="19" ry="13.5" fill="#e8708a"/><circle cx="24" cy="38" r="2.5" fill="#111518"/><circle cx="40" cy="38" r="2.5" fill="#111518"/><path d="M27.5 44.5Q32 47.5 36.5 44.5" stroke="#111518" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    Axolotl
+  </a>
+  <div class="foot-text">
+    <p>Axolotl is a diagnostic support tool under development. It does not replace a doctor's opinion and is not yet approved for clinical use. This site is not an offer of securities.</p>
+    <p>Axolotl is built on MedGemma. Gemma and MedGemma are trademarks of Google LLC; Axolotl is not affiliated with or endorsed by Google.</p>
+    <p>Contact: <a href="mailto:contact@valyon.co">contact@valyon.co</a></p>
+    <p>© 2026 Axolotl, Cotonou, Benin · <a href="mentions-legales.html">Legal notice</a> (in French) · <a href="confidentialite.html">Privacy policy</a> (in French)</p>
+  </div>
+</footer>
+</body>
+</html>
