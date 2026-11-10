@@ -458,8 +458,8 @@ def test_workload_figure_cites_masai_paper(page):
 DECK = "/axolotl-pitch-deck.pdf"
 
 
-@pytest.mark.parametrize("page,label,size", [("index.html", "Télécharger le pitch deck", "2,4 Mo"),
-                                              ("en.html", "Download the pitch deck", "2.4 MB")])
+@pytest.mark.parametrize("page,label,size", [("index.html", "Télécharger le pitch deck", "2,5 Mo"),
+                                              ("en.html", "Download the pitch deck", "2.5 MB")])
 def test_pitch_deck_downloadable(page, label, size):
     root = parse(read(page))
     deck = ROOT / DECK.lstrip("/")
@@ -473,3 +473,18 @@ def test_pitch_deck_downloadable(page, label, size):
     assert size in root.find(id="investir").text()
     hero = root.find(id="intro").find("a", cls="pill")
     assert hero.attrs["href"] == DECK
+
+
+def test_both_founders_have_a_background_line(new, en):
+    for root, role in ((new, "Co-fondateur et co-gérant."), (en, "Co-founder and co-manager.")):
+        lines = [li.find("span").text() for li in root.find(id="investir").find("div", cls="team").find_all("li")]
+        assert len(lines) == 2 and all(l.startswith(role) and len(l) > len(role) + 3 for l in lines), lines
+    assert "DevSecOps" in new.find(id="investir").text() and "DevSecOps" in en.find(id="investir").text()
+
+
+def test_pitch_deck_has_no_placeholder():
+    fitz = pytest.importorskip("fitz")
+    doc = fitz.open(str(ROOT / "axolotl-pitch-deck.pdf"))
+    text = "".join(p.get_text() for p in doc)
+    assert doc.page_count == 12
+    assert "One line of background" not in text and "DevSecOps" in text
