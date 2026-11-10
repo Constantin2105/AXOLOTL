@@ -479,7 +479,7 @@ def test_both_founders_have_a_background_line(new, en):
     for root, role in ((new, "Co-fondateur et co-gérant."), (en, "Co-founder and co-manager.")):
         lines = [li.find("span").text() for li in root.find(id="investir").find("div", cls="team").find_all("li")]
         assert len(lines) == 2 and all(l.startswith(role) and len(l) > len(role) + 3 for l in lines), lines
-    assert "DevSecOps" in new.find(id="investir").text() and "DevSecOps" in en.find(id="investir").text()
+    assert "DevSecOps, MLOps" in new.find(id="investir").text() and "DevSecOps, MLOps" in en.find(id="investir").text()
 
 
 def test_pitch_deck_has_no_placeholder():
@@ -487,4 +487,4 @@ def test_pitch_deck_has_no_placeholder():
     doc = fitz.open(str(ROOT / "axolotl-pitch-deck.pdf"))
     text = "".join(p.get_text() for p in doc)
     assert doc.page_count == 12
-    assert "One line of background" not in text and "DevSecOps" in text
+    assert "One line of background" not in text and "DevSecOps, MLOps" in text
