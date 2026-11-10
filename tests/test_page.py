@@ -38,6 +38,8 @@ CORRECTED = (
     "Un modèle médical de pointe, déjà entraîné",
     # Roadmap of Nov 10: step 1 (MedGemma evaluation + fine-tuning) is in progress
     "Lecture de mammographies sur MedGemma",
+    # Nov 10: the deck is now downloadable directly
+    "Recevoir le dossier investisseur",
 )
 CONTACT = "contact@valyon.co"
 
@@ -449,3 +451,25 @@ def test_workload_figure_cites_masai_paper(page):
     # shortage claim -> Lund release [9], 44 % figure -> Lancet Digital Health [6]
     assert re.search(r'manquent,<sup><a href="#src-9"[^>]*>9</a></sup> elle a réduit de 44&nbsp;% leur travail de lecture\.<sup><a href="#src-6"', html) or \
            re.search(r'short supply,<sup><a href="#src-9"[^>]*>9</a></sup> it cut their reading work by 44%\.<sup><a href="#src-6"', html), page
+
+
+# ---------- Pitch deck download ----------
+
+DECK = "/axolotl-pitch-deck.pdf"
+
+
+@pytest.mark.parametrize("page,label,size", [("index.html", "Télécharger le pitch deck", "2,4 Mo"),
+                                              ("en.html", "Download the pitch deck", "2.4 MB")])
+def test_pitch_deck_downloadable(page, label, size):
+    root = parse(read(page))
+    deck = ROOT / DECK.lstrip("/")
+    assert deck.read_bytes()[:5] == b"%PDF-"
+    mb = deck.stat().st_size / 1024 / 1024
+    assert f"{mb:.1f}".replace(".", "," if page == "index.html" else ".") in size
+    links = [a for a in root.find_all("a") if a.attrs.get("href") == DECK]
+    assert any(a.text() == label for a in links), page
+    card = [a for a in root.find(id="investir").find_all("a") if a.attrs.get("href") == DECK]
+    assert card and "download" in card[0].attrs
+    assert size in root.find(id="investir").text()
+    hero = root.find(id="intro").find("a", cls="pill")
+    assert hero.attrs["href"] == DECK
