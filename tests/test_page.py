@@ -414,3 +414,27 @@ def test_footnote_click_highlights_source():
     assert "Retour au texte" in js and "Back to text" in js
     assert ".sources li:target" in css and ".sources li.is-cited" in css    # works without JS too
     assert "animation: none !important" in css               # reduced motion: static highlight
+
+
+# ---------- Review of Nov 10 ----------
+
+def test_no_false_no_data_claim(new, en):
+    assert "ne collecte aucune donnée" not in new.text()
+    assert "Ce site n'a pas de formulaire" in new.find(id="investir").text()
+    assert "collects no data" not in en.text()
+    assert "This site has no form" in en.find(id="investir").text()
+
+
+def test_survival_sentence_subject(new, en):
+    lede = new.find(id="probleme").find("p", cls="lede").text()
+    assert "S'il est repéré tard, quand il s'est déjà propagé à distance, la survie tombe à 32 %" in lede
+    assert "If it is found late, once it has spread to distant organs, survival falls to 32%" in \
+        en.find(id="probleme").find("p", cls="lede").text()
+
+
+@pytest.mark.parametrize("page", ["index.html", "en.html"])
+def test_workload_figure_cites_masai_paper(page):
+    html = read(page)
+    # shortage claim -> Lund release [9], 44 % figure -> Lancet Digital Health [6]
+    assert re.search(r'manquent,<sup><a href="#src-9"[^>]*>9</a></sup> elle a réduit de 44&nbsp;% leur travail de lecture\.<sup><a href="#src-6"', html) or \
+           re.search(r'short supply,<sup><a href="#src-9"[^>]*>9</a></sup> it cut their reading work by 44%\.<sup><a href="#src-6"', html), page
