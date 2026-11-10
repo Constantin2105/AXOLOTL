@@ -36,6 +36,8 @@ CORRECTED = (
     # Vercel hosting + review of Nov 9: early-detection claim sourced, MedGemma fine-tuning stated
     "Un cancer du sein repéré tôt",
     "Un modèle médical de pointe, déjà entraîné",
+    # Roadmap of Nov 10: step 1 (MedGemma evaluation + fine-tuning) is in progress
+    "Lecture de mammographies sur MedGemma",
 )
 CONTACT = "contact@valyon.co"
 
@@ -135,7 +137,7 @@ def test_dom_contract(new):
     assert counts == ["1.15", "2.1", "44", "3"]
     assert new.find("canvas", id="scan") is not None
     road = new.find("ol", cls="road")
-    assert road.find("li", cls="done") is not None and road.find("li", cls="now") is not None
+    assert road.find("li", cls="now") is not None
 
 
 def test_no_fake_controls(new):
@@ -196,10 +198,19 @@ def test_no_unearned_validation_claim(new):
     assert not re.search(r"\bvalidée?s?\b sur", text)
 
 
-def test_pilot_in_preparation(new):
-    now = new.find("ol", cls="road").find("li", cls="now")
-    assert now.find("span", cls="when").text() == "Étape 2, en préparation"
-    assert "en cours" not in new.find("ol", cls="road").text()
+def test_roadmap_matches_real_state(new, en):
+    # Step 1 (prototype: MedGemma evaluation + fine-tuning) is in progress; the pilot is only in preparation
+    steps = new.find("ol", cls="road").find_all("li")
+    first, second = next(steps), next(steps)
+    assert "now" in first.classes and first.find("span", cls="when").text() == "Étape 1, en cours"
+    assert "fine-tuning" in first.text() and "mammographies publiques" in first.text()
+    assert second.find("span", cls="when").text() == "Étape 2, en préparation"
+    assert "autorisation de l'APDP" in second.text() and "comité d'éthique" in second.text()
+    en_steps = en.find("ol", cls="road").find_all("li")
+    e1, e2 = next(en_steps), next(en_steps)
+    assert "now" in e1.classes and e1.find("span", cls="when").text() == "Step 1, in progress"
+    assert e2.find("span", cls="when").text() == "Step 2, in preparation"
+    assert "APDP authorisation and ethics approval" in e2.text()
 
 
 def test_mammography_only(new):
